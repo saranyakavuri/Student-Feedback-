@@ -1,0 +1,109 @@
+﻿@model Gios_mvcSolution.Areas.UseCase.ViewModels.Create_ViewModel
+
+@{
+    ViewBag.Title = "Create New Use Case";
+}
+
+<script>
+    $(document).ready(function () {
+        getNextDDL("BU", 'x');
+    });
+</script>
+
+<h2>Create</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UCNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.UCNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.UCNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UCDescr, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.UCDescr, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.UCDescr, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <select name="bu" id="select_BU" required onchange="getNextDDL('Seg', this.value)">
+            <option> Select Segment </option>
+        </select>
+        <select name="segement" id="select_Seg" required onchange="getNextDDL('Loc', this.value)">
+            <option> Select Segment </option>
+        </select>
+        <select name="location" id="select_Loc" required>
+            <option> Select Location </option>
+        </select>
+        <select name="process" id="select_process" required>
+            <option value=" " selected disabled hidden>Choose here</option>
+            <option value="p1">Process1</option>
+            <option value="p2">Process2</option>
+            <option value="p3">Process3</option>
+            <option value="p4">Process4</option>
+        </select>
+        <select name="line" id="mselect_line" required>
+            <option value="Line A">LineA</option>
+            <option value="Line B">LineB</option>
+            <option value="Line C">LineC</option>
+            <option value="Line D">LineD</option>
+        </select>
+        <div class="form-group">
+            @Html.LabelFor(model => model.DINumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DINumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DINumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Sensitive, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Sensitive, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Sensitive, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LessonsLearned, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LessonsLearned, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LessonsLearned, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to Home", "Index")
+</div>

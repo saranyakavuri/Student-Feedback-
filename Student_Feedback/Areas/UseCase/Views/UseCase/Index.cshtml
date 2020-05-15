@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "Use Case Home";
+}
+
+
+<div class="jumbotron">
+    <h1>Use Cases</h1>
+    <p class="lead">Welcome to the Use Case Module, please click the button for the action that best fits your reason for visiting. Are you to create, update, or search for new ideas?</p>
+
+</div>
+
+<div class="row">
+    <div class="col-sm-3">
+        <input type="button" value="New Use Case" onclick="window.location='@Url.Action("Create", "UseCase")'" />
+
+        <button> Update Use Case</button>
+        <button> Search Exisiting Use Case</button>
+    </div>
+</div>

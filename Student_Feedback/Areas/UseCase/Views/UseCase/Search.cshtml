@@ -1,0 +1,117 @@
+﻿@model Gios_mvcSolution.Areas.UseCase.ViewModels.SearchUseCases
+@{
+    ViewBag.Title = "Search";
+}
+
+<script>
+    function showFilters() {
+        $('#filters').toggle();
+    }
+
+
+
+
+
+</script>
+
+
+
+
+<h2>Search</h2>
+
+<div class="box">
+    <div class="row">
+        <div class="col-sm-10">
+            <input type="search" id="search" placeholder="Search..." />
+            <button type="button" onclick="searchForuseCases()"><span class="icon"><i class="fa fa-search"></i></span></button>
+            <a href="javascript:void(0);" onclick='showFilters();'>Advanced Filters</a>
+        </div>
+    </div>
+    <div class="spacer-20px"></div>
+    <div id="filters" style="display:none">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.Label("Select BUs to serach within", htmlAttributes: new { @class = "control-label col-md-2" })
+                    @foreach (var bu in Model.lstBusinessUnits)
+                    {
+                        <div class="form-check-inline">
+                            @Html.CheckBoxFor(model => bu.isSelected, htmlAttributes: new { @onclick = "updateBUList(this.id)", @id = bu.strBUID })
+                            @Html.Label(bu.strBUID, htmlAttributes: new { @class = "control-label col-md-3" })
+                            @Html.HiddenFor(model => bu.strBUID)
+                        </div>
+                    }
+                </div>
+                @Html.HiddenFor(model => model.selectedBU, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.Label("Select Segments to serach within", htmlAttributes: new { @class = "control-label col-md-2" })
+                    @foreach (var seg in Model.lstSegments)
+                    {
+                        <div class="form-check-inline">
+                            @Html.CheckBoxFor(model => seg.isSelected, htmlAttributes: new { @onclick = "updateSegmentList(this.id)", @id = seg.strSegmentID })
+                            @Html.Label(seg.strSegmentID, htmlAttributes: new { @class = "control-label col-md-3" })
+                            @Html.HiddenFor(model => seg.strSegmentID)
+                        </div>
+                    }
+                </div>
+                @Html.HiddenFor(model => model.selectedSegment, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    @Html.Label("Select Plants to serach within", htmlAttributes: new { @class = "control-label col-md-2" })
+                    @foreach (var plant in Model.lstPlants)
+                    {
+                        <div class="form-check-inline">
+                            @Html.CheckBoxFor(model => plant.isSelected, htmlAttributes: new { @onclick = "updatePlantList(this.id)", @id = plant.intPlantID })
+                            @Html.Label(plant.strPlantName, htmlAttributes: new { @class = "control-label col-md-5" })
+                            @Html.HiddenFor(model => plant.intPlantID)
+                        </div>
+                    }
+                </div>
+                @Html.HiddenFor(model => model.selectedPlants, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group" id="checkbox_ImpactKPI">
+                    @Html.Label("KPI's Expected to be Impacted", htmlAttributes: new { @class = "control-label col-md-2" })
+                    @foreach (var item in Model.ImpactKPIs)
+                    {
+                        <div class="form-check-inline col-sm-1">
+                            @Html.CheckBoxFor(model => item.isSelected, htmlAttributes: new { @onclick = "updateImpactKPIList(this.id)", @id = @item.strKPI, @class = "reqKPI phase1" })
+                            @Html.Label(item.strKPI, htmlAttributes: new { @class = "control-label" })
+                            @Html.HiddenFor(model => item.strKPI)
+                        </div>
+                    }
+                </div>
+                @Html.HiddenFor(model => model.SelectedImpactKPIs, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group" id="checkbox_RequiredSupport">
+                    @Html.Label("Required Support Needed?", htmlAttributes: new { @class = "control-label col-md-2" })
+                    @foreach (var item in Model.RequiredSupportTypes)
+                    {
+                        <div class="form-check-inline">
+                            @Html.CheckBoxFor(model => item.isSelected, htmlAttributes: new { @onclick = "updateSupportList(this.id)", @id = @item.strSupportType, @class = "reqSupp phase1" })
+                            @Html.Label(item.strSupportType, htmlAttributes: new { @class = "control-label col-md-5" })
+                            @Html.HiddenFor(model => item.strSupportType)
+                        </div>
+                    }
+                </div>
+                @Html.HiddenFor(model => model.SelectedSupport, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="partialRender">
+
+</div>

@@ -1,0 +1,209 @@
+﻿
+@{
+    ViewBag.Title = "Use Case - Create and Modify Settings";
+}
+
+<!-- I just put the button here for the time being,
+    it in no way needs to be on this page,
+    but didn't know how you would want to tie it to the menu options-->
+<div class="btn btn-dark">
+    @Html.ActionLink("Approve Use Cases", "ApproveUseCases")
+
+</div>
+<br /><br />
+
+
+<h2>Create and Modify Use Case Settings</h2>
+
+<script>
+
+    function loadPartialReqSuppView(viewToLoad, id){
+        console.log("Button Click");
+        console.log(viewToLoad);
+        $('#viewLoad_ReqSupport').empty();
+        if (viewToLoad === "Create") {
+            $.get('@Url.Action("CreateRequiredSupport", "Admin")', function (data) {
+               // console.log(data);
+                $('#viewLoad_ReqSupport').html(data);
+            });
+        }
+         if (viewToLoad === "Edit") {
+             console.log(id);
+             $.get('@Url.Action("UpdateRequiredSupport", "Admin")/' + id, function (data) {
+             //   console.log(data);
+                 $('#viewLoad_ReqSupport').html(data);
+            });
+
+        }
+        if (viewToLoad === "Delete") {
+             console.log(id);
+             $.get('@Url.Action("DeleteRequiredSupport", "Admin")/' + id, function (data) {
+             //   console.log(data);
+                 $('#viewLoad_ReqSupport').html(data);
+            });
+
+        }
+    }
+
+    function loadPartialFileTypeView(viewToLoad, id){
+        console.log("Button Click");
+        console.log(viewToLoad);
+        $('#viewLoad_FileTypes').empty();
+        if (viewToLoad === "Create") {
+            $.get('@Url.Action("CreateFileType", "Admin")', function (data) {
+               // console.log(data);
+                $('#viewLoad_FileTypes').html(data);
+            });
+        }
+         if (viewToLoad === "Edit") {
+             console.log(id);
+             $.get('@Url.Action("UpdateFileType", "Admin")/' + id, function (data) {
+             //   console.log(data);
+                 $('#viewLoad_FileTypes').html(data);
+            });
+
+        }
+        if (viewToLoad === "Delete") {
+             console.log(id);
+             $.get('@Url.Action("DeleteFileType", "Admin")/' + id, function (data) {
+             //   console.log(data);
+                 $('#viewLoad_FileTypes').html(data);
+            });
+
+        }
+    }
+
+     function loadPartialStatusView(viewToLoad, id){
+        console.log("Button Click");
+        console.log(viewToLoad);
+        $('#viewLoad_Status').empty();
+        if (viewToLoad === "Create") {
+            $.get('@Url.Action("CreateStatus", "Admin")', function (data) {
+               // console.log(data);
+                $('#viewLoad_Status').html(data);
+            });
+        }
+         if (viewToLoad === "Edit") {
+             console.log(id);
+             $.get('@Url.Action("UpdateStatus", "Admin")/' + id, function (data) {
+             //   console.log(data);
+                 $('#viewLoad_Status').html(data);
+            });
+
+        }
+        if (viewToLoad === "Delete") {
+             console.log(id);
+             $.get('@Url.Action("DeleteStatus", "Admin")/' + id, function (data) {
+             //   console.log(data);
+                 $('#viewLoad_Status').html(data);
+            });
+
+        }
+    }
+
+     function loadPartialCompassCatView(viewToLoad, id){
+        console.log("Button Click");
+        console.log(viewToLoad);
+        $('#viewLoad_CompassCat').empty();
+        if (viewToLoad === "Create") {
+            $.get('@Url.Action("CreateCompassCat", "Admin")', function (data) {
+               // console.log(data);
+                $('#viewLoad_CompassCat').html(data);
+            });
+        }
+         if (viewToLoad === "Edit") {
+             console.log(id);
+             $.get('@Url.Action("UpdateCompassCat", "Admin")/' + id, function (data) {
+             //   console.log(data);
+                 $('#viewLoad_CompassCat').html(data);
+            });
+
+        }
+        if (viewToLoad === "Delete") {
+             console.log(id);
+             $.get('@Url.Action("DeleteCompassCat", "Admin")/' + id, function (data) {
+             //   console.log(data);
+                 $('#viewLoad_CompassCat').html(data);
+            });
+
+        }
+    }
+
+    function loadPartialImpactKPIView(viewToLoad, id) {
+        $('#viewLoad_ImpactKPI').empty();
+        if (viewToLoad === "Create") {
+            $.get('@Url.Action("CreateImpactKPI", "Admin")', function (data) {
+               // console.log(data);
+                $('#viewLoad_ImpactKPI').html(data);
+            });
+        }
+        else if (viewToLoad === "Edit") {
+             console.log(id);
+             $.get('@Url.Action("UpdateImpactKPI", "Admin")/' + id, function (data) {
+             //   console.log(data);
+                 $('#viewLoad_ImpactKPI').html(data);
+            });
+
+        }
+        else if (viewToLoad === "Delete") {
+             console.log(id);
+             $.get('@Url.Action("DeleteImpactKPI", "Admin")/' + id, function (data) {
+             //   console.log(data);
+                 $('#viewLoad_ImpactKPI').html(data);
+            });
+
+        }
+    }
+</script>
+
+
+<div>
+
+    @Html.Action("ListRequiredSupport", "Admin")
+    <hr />
+
+    <div id="viewLoad_ReqSupport">
+
+    </div>
+
+</div>
+<div>
+
+    @Html.Action("ListFileTypes", "Admin")
+    <hr />
+
+    <div id="viewLoad_FileTypes">
+
+    </div>
+
+</div>
+<div>
+
+    @Html.Action("ListStatus", "Admin")
+    <hr />
+
+    <div id="viewLoad_Status">
+
+    </div>
+
+</div>
+@*<div>
+    The Compass Categories are not currently being used, so for now we will leave them out
+    @Html.Action("ListCompassCat", "Admin")
+    <hr />
+
+    <div id="viewLoad_CompassCat">
+
+    </div>
+
+</div>*@
+<div>
+
+    @Html.Action("ListImpactKPI", "Admin")
+    <hr />
+
+    <div id="viewLoad_ImpactKPI">
+
+    </div>
+
+</div>

@@ -1,0 +1,87 @@
+﻿@model Gios_mvcSolution.Models.BusinessUnit
+@{
+    ViewBag.Title = "DataEntry";
+}
+
+
+
+<script>
+    function generateMetricsFormLabels() {
+        var counter = 20; //Random Value for now, will be based on counts coming from DB
+        $('#formMetricEntry').empty();
+        $('#formMetricEntry').append('')
+        for (i = 1; i <= counter; i++) {
+            $('#formMetricEntry').append('<div id="metric' + i + 'Div" class="form-group-sm"> ' +
+                '<label id = "' + i + '" > Metric Name ' + i + '</label >' +
+                '</div >');
+        }
+        return counter;
+    }
+
+    function showSelection() {
+        var bu = $('#select_bu').val();
+        var loc = $('#select_loc').val();
+        var proc = $('#select_process').val();
+        var lines = $('#mselect_line').val();
+        console.log(bu + "  " + loc + "  " + proc + "  " + lines);
+        console.log(lines);
+        if (lines.length == 0) {
+            alert('You Must Select At least 1 one Line to Enter Metrics For');
+            $('#mselect_line').focus();
+        }
+        else {
+            var metricCount = generateMetricsFormLabels();
+            var i;
+            for (mLablLoop = 1; mLablLoop <= metricCount; mLablLoop++) {
+                for (i = 0; i < lines.length; i++) {
+                    $('#metric' + mLablLoop + 'Div').append('<input id="metric' + mLablLoop + '_' + i + '" name="metric' + mLablLoop + '_' + i + '" type="number" class="form-control-md" placeholder = "Enter Value for ' + lines[i] + '" required value = "' + (mLablLoop + 5 + i) * 3 + '"/>');
+
+                }
+            }
+            $('#formMetricEntry').append('<button type="submit" class=" btn btn-secondary" id="btn_lagging" onclick="submitMetricValues()">Submit Metrics</button>')
+        }
+    }
+
+    function submitMetricValues() {
+        console.log('I clicked SUbmit');
+    }
+
+
+</script>
+
+<h2>DataEntry</h2>
+<form>
+    @Html.DropDownList("BUDropDownList", Model.BuList, "Select BU", new { @onchange = "getNextDDL('Seg', this.value)" })
+    <select name="segement" id="select_Seg" required onchange="getNextDDL('Plant', this.value)" >
+        <option> Select Segment </option>
+    </select>
+    <select name="plant" id="select_Plant" required onchange="getNextDDL('Proc', this.value)" >
+        <option> Select Plant </option>
+    </select>
+    <select name="process" id="select_Proc" required onchange="getNextDDL('Line', this.value)" >
+        <option value=" " selected disabled hidden>Choose Process</option>
+    </select>
+    <select multiple name="line" id="select_Line" required>
+        <option value=" ">Select Line </option>
+        
+    </select>
+
+
+    <br /><br /><br />
+
+
+    <div class="col-sm-1">
+        <input type="button" class=" btn btn-outline-secondary" value="Leading Metrics" id="btn_leading" onclick="showSelection()" />
+    </div>
+    <div class="col-sm-1">
+        <input type="button" class=" btn btn-outline-secondary" value="Lagging Metrics" id="btn_lagging" onclick="showSelection()" />
+    </div>
+    </div>
+</form> <!-- Form SUbmission for Picking BU,LOC,PROC,LINE-->
+<!-- Button Click for Metrics should trigger next set of fields to appear-->
+<br /><br />
+<div class="row">
+    <div class="col offset-1">
+        <form id="formMetricEntry"></form>
+    </div>
+</div>

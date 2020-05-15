@@ -1,0 +1,92 @@
+﻿
+
+@{
+    ViewBag.Title = "Create / Modify BU";
+}
+
+<script>
+
+    function loadPartialBUView(viewToLoad, id)
+    {
+        console.log("Button Click");
+        console.log(viewToLoad);
+        $('#viewLoadBUDiv').empty();
+        if (viewToLoad === "Create") {
+            $.get('@Url.Action("CreateBU", "LocationAdmin")', function (data) {
+               // console.log(data);
+                $('#viewLoadBUDiv').html(data);
+            });
+        }
+         if (viewToLoad === "Edit") {
+             console.log(id);
+             $.get('@Url.Action("EditBU", "LocationAdmin")/' + id, function (data) {
+             //   console.log(data);
+                $('#viewLoadBUDiv').html(data);
+            });
+
+        }
+        if (viewToLoad === "Delete") {
+             console.log(id);
+             $.get('@Url.Action("DeleteBU", "LocationAdmin")/' + id, function (data) {
+             //   console.log(data);
+                $('#viewLoadBUDiv').html(data);
+            });
+
+        }
+    }
+
+    function loadPartialSegmentView(viewToLoad, id)
+    {
+        console.log("Button Click");
+        console.log(viewToLoad);
+        $('#viewLoadSegDiv').empty();
+        if (viewToLoad === "Create") {
+            $.get('@Url.Action("CreateSeg", "LocationAdmin")', function (data) {
+               // console.log(data);
+                $('#viewLoadSegDiv').html(data);
+            });
+        }
+         if (viewToLoad === "Edit") {
+             console.log(id);
+             $.get('@Url.Action("EditSeg", "LocationAdmin")/' + id, function (data) {
+             //   console.log(data);
+                 $('#viewLoadSegDiv').html(data);
+            });
+
+        }
+        if (viewToLoad === "Delete") {
+             console.log(id);
+             $.get('@Url.Action("DeleteSeg", "LocationAdmin")/' + id, function (data) {
+             //   console.log(data);
+                $('#viewLoadSegDiv').html(data);
+            });
+
+        }
+    }
+
+</script>
+
+<!--  BUSINESS UNIT  -->
+<div>
+
+    @Html.Partial("ListBusinessUnits")
+    <hr />
+
+    <div id="viewLoadBUDiv">
+
+    </div>
+
+</div>
+
+<!-- Segment-->
+<div>
+
+    @Html.Action("ListSegment", "LocationAdmin")
+
+    <hr />
+
+    <div id="viewSegDiv">
+
+    </div>
+
+</div>

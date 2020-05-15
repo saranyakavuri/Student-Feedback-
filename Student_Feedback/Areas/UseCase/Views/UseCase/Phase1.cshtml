@@ -1,0 +1,259 @@
+﻿@model Gios_mvcSolution.Areas.UseCase.ViewModels.Phase1_Create
+
+
+@using (Html.BeginForm("Phase1", "UseCase", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="spacer-20px"></div>
+    <div class="row paddingLeftDesktopOnly_30px paddingRightDesktopOnly_30px">
+        <div class="col-md-6">
+            <!-- Use Case SPA -->
+            <div class="row">
+                <div class="col-md-auto control-label labelGIOS">Use Case <strong>SPA</strong></div>
+                <div class="col noLeftPaddingDesktop">
+                    @Html.EditorFor(model => model.strUseCaseSPA, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.UserID } })
+                    @Html.ValidationMessageFor(model => model.strUseCaseSPA, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <!-- Use Case Title -->
+            <div class="row">
+                <div class="col-md-auto control-label labelGIOS">Use Case <strong>Title</strong></div>
+                <div class="col noLeftPaddingDesktop">
+                    @Html.EditorFor(model => model.strTitle, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.strTitle, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="spacer-20px"></div>
+    <div class="row paddingLeftDesktopOnly_30px paddingRightDesktopOnly_30px">
+        <div class="col-md-6">
+            <!-- Problem Description -->
+            <div class="row">
+                <div class="col-md-auto control-label labelGIOS"><strong>Problem</strong> Description</div>
+                <div class="col noLeftPaddingDesktop">
+                    @Html.TextAreaFor(model => model.strDescription, htmlAttributes: new { @rows = "3" })
+                    @Html.ValidationMessageFor(model => model.strDescription, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <!-- Solution / Hypothesis -->
+            <div class="row">
+                <div class="col-md-auto control-label labelGIOS"><strong>Solution</strong> <span class="colorGreyLight">/</span> Hypothesis</div>
+                @*<div class="col-md-auto">@Html.LabelFor(model => model.strHypothesis, htmlAttributes: new { @class = "control-label labelGIOS" })</div>*@
+                <div class="col noLeftPaddingDesktop">
+                    @Html.TextAreaFor(model => model.strHypothesis, htmlAttributes: new { @rows = "3" })
+                    @Html.ValidationMessageFor(model => model.strHypothesis, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Select BU Box -->
+    <div class="spacer-20px"></div> <div class="paddingTopDesktopOnly_10px"></div>
+    <div class="boxGreyBorders">
+        <div class="row">
+            <div class="col-md-3 paddingBottomMobileOnly_15px">
+                <!-- Select BU -->
+                @Html.DropDownListFor(model => model.strBUID, new SelectList(Model.businessUnits.Select(m => m.strBUID)), "Select BU", new { id = "select_BU", onchange = "populateDDL('Segment', this)", @class = "dropDownGIOS form-control" })
+            </div>
+            <div class="col-md-3 paddingBottomMobileOnly_15px">
+                <!-- Select Segment -->
+                @Html.DropDownListFor(model => model.strSegmentID, new SelectList(new List<SelectListItem>(), "Value", "Text"), "Select Segment", new { id = "select_Segment", disabled = "true", onchange = "populateDDL('Plant', this)", @class = "dropDownGIOS form-control" })
+            </div>
+            <div class="col-md-3 paddingBottomMobileOnly_15px">
+                <!-- Select Plant -->
+                @Html.DropDownListFor(model => model.intPlantID, new SelectList(new List<SelectListItem>(), "Value", "Text"), "Select Plant", new { id = "select_Plant", disabled = "true", onchange = "getLineDDLForUseCase('Line', this)", @class = "dropDownGIOS form-control" })
+            </div>
+            <div class="col-md-3">
+                <!-- Select Line -->
+                @Html.DropDownListFor(model => model.ProductProcessID, new SelectList(new List<SelectListItem>(), "Value", "Text"), "Select Line", new { id = "select_Line", disabled = "true", onchange = "activateFields()", @class = "dropDownGIOS form-control" })
+            </div>
+        </div>
+        <div class="spacer-20px"></div>
+        <div class="row">
+            <!-- Assets -->
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-auto control-label labelGIOS">Assets</div>
+                    <div class="col noLeftPaddingDesktop">
+                        @Html.EditorFor(model => model.strAssests, new { htmlAttributes = new { @class = "form-control", @disabled = "true" } })
+                        @Html.ValidationMessageFor(model => model.strAssests, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <!-- Team -->
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-auto control-label labelGIOS">Team</div>
+                    <div class="col noLeftPaddingDesktop">
+                        @Html.EditorFor(model => model.strTeam, new { htmlAttributes = new { @class = "form-control", @disabled = "true" } })
+                        @Html.ValidationMessageFor(model => model.strTeam, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="spacer-20px"></div> <div class="paddingTopDesktopOnly_10px"></div>
+    <div class="row paddingLeftDesktopOnly_30px paddingRightDesktopOnly_45px paddingTopDesktopOnly_10px">
+        <div class="col-lg-4 paddingBottomMobileOnly_15px">
+            <!-- Idea Estimate -->
+            <div class="control-label">
+                <div class="labelGIOS">Idea <strong>Estimate</strong></div>
+                <div class="subLabelGIOS font-italic">in <strong>Thousands</strong> of US Dollars</div>
+            </div>
+            <div class="paddingRightDesktopOnly_50px paddingTopDesktopOnly_10px">
+                @Html.EditorFor(model => model.fltIdeaEstimate, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                @Html.ValidationMessageFor(model => model.fltIdeaEstimate, "", new { @class = "text-danger" })
+            </div>
+
+            <!-- Impact Calculating Methodology -->
+            <div class="spacer-20px"></div>
+            <div class="control-label">
+                <div class="labelGIOS">Impact Calculating <strong>Methodology</strong></div>
+            </div>
+            <div class="paddingRightDesktopOnly_50px paddingTopDesktopOnly_10px">
+                @*@Html.EditorFor(model => model.strImpactCalculation, new { htmlAttributes = new { @class = "form-control" }})*@
+                @Html.TextAreaFor(model => model.strImpactCalculation, htmlAttributes: new { @class = "form-control", @rows = "3" })
+                @Html.ValidationMessageFor(model => model.strImpactCalculation, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="col-lg-4 paddingBottomMobileOnly_15px" id="checkbox_ImpactKPI" style="padding-right: 0px;">
+            <!-- Required Support Needed -->
+            <div class="labelGIOS"><strong>Required support</strong> <i>needed</i></div>
+            <div style="padding-left: 30px;" id="checkbox_RequiredSupport">
+                @foreach (var item in Model.RequiredSupportTypes)
+                {
+                    <div class="row">
+                        <div class="checkbox col-xs-2" style="margin-top: 11px;">
+                            @Html.CheckBoxFor(model => item.isSelected, htmlAttributes: new { @onclick = "updateSupportList(this.id)", @id = @item.strSupportType, @class = "reqSupp checkboxGIOS" })
+                        </div>
+                        <div class="col" >
+                            @Html.Label(item.strSupportType, htmlAttributes: new { @class = "control-label labelGIOS" })
+                            @Html.HiddenFor(model => item.strSupportType)
+                        </div>
+                    </div>
+                }
+                <div class="spacer-10px"></div>
+
+                <!-- Hidden field - Capex Estimate -->
+                <div class="form-group row paddingRightDesktopOnly_90px" id="CapexEstimate" style="display:none">
+                    <span class="labelGIOS"><strong>Estimate</strong></span>
+                    <span class="subLabelGIOS font-italic">in <strong>Thousands</strong> of US Dollars</span>
+                    <div class="paddingTopDesktopOnly_5px">
+                        @Html.EditorFor(model => model.intCAPEXEstimate, new { htmlAttributes = new { @class = "form-control phase1" } })
+                    </div>
+                </div>
+
+                <!-- hidden field - Other -->
+                <div class="form-group row paddingRightDesktopOnly_90px" id="OtherOption" style="display:none">
+                    <span class="labelGIOS"><strong>Other</strong> Options</span>
+                    <div class="paddingTopDesktopOnly_5px">
+                        @Html.EditorFor(model => model.strReqSupportOther, new { htmlAttributes = new { @class = "form-control phase1" } })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ITAR protected -->
+        <div class="col-lg-4">
+            <div class="shadow paddingBottomMobileOnly_15px paddingBottomDesktopOnly_30px paddingLeftMobileOnly_30px paddingRightMobileOnly_30px paddingTopMobileOnly_20px" style="padding-bottom: 35px; margin-bottom: 20px;">
+                <div class="labelGIOS paddingLeftDesktopOnly_10px"><strong>ITAR</strong> protected</div>
+                <div style="padding-left: 30px; margin-top: 11px;">
+                    @Html.EditorFor(model => model.ysnITAR, new { htmlAttributes = new { @onchange = "sensitiveUseCase()", @class = "checkboxGIOS" } })
+                    @Html.ValidationMessageFor(model => model.ysnITAR, "", new { @class = "text-danger" })
+                </div>
+                <div id="AttachmentLabel" class="paddingLeftDesktopOnly_30px paddingRightDesktopOnly_20px">
+                    <div id="errors" style="margin-top: 15px;"></div>
+                    <div class="labelGIOS">Add <strong>Attachment</strong>&nbsp;&nbsp;<i class="fas fa-cloud-upload-alt colorGreyLightest" style="float:right; padding-top: 3px;"></i></div>
+                    <div class="greyLine"></div>
+                    <div class="spacer-10px"></div>
+                    <div class="subLabelGIOS">
+                        <span class="font-italic">Permitted <strong>file extensions</strong></span>:
+                        <span id="permittedFiles" style="color:#00AFBA;">@String.Join(", ", Model.supportedFileTypes.Select(m => m.strFileType).ToArray())</span>
+                    </div>
+                    <div class="spacer-10px"></div>
+                    <!-- Choose Files - button -->
+                    <label for="file-upload" class="buttonFileUpload">
+                        <!-- was: class="custom-file-upload" -->
+                        <i class="fas fa-arrow-up colorGreyLightest" style="padding-right: 5px;"></i> Choose Files
+                    </label>
+                    <input type="file" id="file-upload" name="files" multiple onchange="fileValidation()" />
+                </div>
+                @Html.HiddenFor(model => model.strFileType, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+            </div>
+        </div>
+    </div>
+    <div id="errors"></div>
+
+    <div class="spacer-10px"></div> <div class="paddingTopDesktopOnly_10px"></div>
+    <div class="row paddingLeftDesktopOnly_30px paddingRightDesktopOnly_45px paddingTopDesktopOnly_10px">
+        <div class="col-lg-12">
+            <!-- KPIs expected to be impacted -->
+            <div class="labelGIOS"><strong>KPI</strong>s expected to be <i>impacted</i></div>
+            <div class="subLabelGIOS font-italic">Click <strong>KPI name</strong> to view <strong>definition</strong></div>
+            <div style="padding-left: 30px;">
+                @foreach (var item in Model.ImpactKPIs)
+                {
+                    <div class="row">
+                        <div class="checkbox col-xs-2" style="margin-top: 11px;">
+                            @Html.CheckBoxFor(model => item.isSelected, htmlAttributes: new { @onclick = "updateImpactKPIList(this.id)", @id = @item.strKPI, @class = "reqKPI checkboxGIOS" })
+                        </div>
+                        <div class="col" style="padding-top: 7px;">
+                            <a href="javascript:void(0);" class="linkKPI" onclick="showKPIDefinition(this.id)" id="@Html.Raw(item.intImpactKPIID)">@(item.strKPI)</a>
+                            @Html.HiddenFor(model => item.strKPI)
+                            <div id="div_@Html.Raw(item.intImpactKPIID)" class="divKPIDefinition divHide">
+                                @Html.DisplayFor(model => item.strKPIDescr)
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            @Html.HiddenFor(model => model.SelectedImpactKPIs)
+        </div>
+    </div>
+
+
+    <!-- hidden fields - used in the app -->
+    @Html.HiddenFor(model => model.SelectedSupport, new { htmlAttributes = new { @class = "form-control" } })
+    @Html.HiddenFor(model => model.status, new { htmlAttributes = new { @class = "form-control" } })
+
+    <div class="row">
+        <div class="col float-left paddingLeftDesktopOnly_30px">
+            <div class="spacer-10px">&nbsp;</div>
+            <div class="greyLine"></div>
+            <div class="spacer-15px"></div>
+            <div class="spacer-20px"></div>
+
+            <!-- 'Create' label > works with hidden 'Create' button below -->
+            <div class="col-md-3 buttonUpdateUseCase">
+                <label class="cardSmallerTextLightGrey" for="form-submit">
+                    <div class="card cardSmaller mb-5">
+                        <div class="card-body" style="cursor: pointer;">
+                            <h5 class="card-title">
+                                <strong><span class="colorTeal">Create</span> </strong><span style="font-weight: 300;">Use Case</span>
+                            </h5>
+                            <div class="greyLine"></div>
+                            <div class="spacer-5px"></div>
+                            <p class="card-text" style="font-weight: 300;">
+                                Allows for <strong>creation</strong>, setting of <i>new</i> Use Case <i>values</i> and inclusion of file <i>attachments</i>.
+                            </p>
+                            <img class="cardArrow" src="https://res.cloudinary.com/arconic/image/upload/v1548790515/GIOS/images/icon_font_awesome_arrow_right_15pt.png" />
+                        </div>
+                    </div>
+                </label>
+            </div>
+            <!-- this 'Create' button must stay as it is made hidden by CSS but the type, value and name are still used by label above-->
+            <div><input type="submit" id="form-submit" value="Create" name="Phase1" class="btn btn-outline-info" /></div>
+
+        </div>
+    </div>
+}

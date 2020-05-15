@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Gios_mvcSolution.Areas.UseCase.Models.FileTypes>
+
+<h4> Create / Modify Valid File Types</h4>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.strFileType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strFileDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dtmCreated)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strCreatorID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dtmModified)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strModifierID)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <th>
+                @Html.DisplayFor(modelItem => item.strFileType)
+            </th>
+            <td>
+                @Html.DisplayFor(modelItem => item.strFileDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.dtmCreated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strCreatorID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.dtmModified)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strModifierID)
+            </td>
+            <td>
+                <button class="btn btn-default" onclick="loadPartialFileTypeView('Edit', this.id)" id="@item.strFileType"> Edit</button>
+                <button class="btn btn-default" onclick="loadPartialFileTypeView('Delete', this.id)" id="@item.strFileType"> Remove</button>
+            </td>
+        </tr>
+    }
+
+</table>
+<hr />
+<div>
+    @* @Html.ActionLink("Create New", "Create", null, new { @id = "Create" })*@
+    <button class="btn btn-dark" onclick="loadPartialFileTypeView('Create', this.id)" id="Create"> Create Valid File Type</button>
+</div>

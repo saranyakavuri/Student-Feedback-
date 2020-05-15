@@ -1,0 +1,721 @@
+﻿@model Gios_mvcSolution.Areas.UseCase.ViewModels.Phase2_Update
+@{
+    /**/
+
+    /**/
+
+    ViewBag.Title = "Use Case Complete";
+    ViewBag.Description = "Use Case Complete - save newly created Use Case";
+}
+
+
+<script>
+    /***************************************************/
+    /***************************************************/
+        /* Global Variable Arrays */
+        var oldVals = [];
+        var newVals = [];
+        var filesToRemove = [];
+        var impactKPIVals = [];
+        var oldKPIVals = [];
+     /***************************************************/
+     /***************************************************/
+
+    //On page load, get the multi select options repopulated to what the use case already has
+    $(function () {
+        reloadSelectedOptions();
+        var seg = '@Html.Raw(Model.strSegmentID)';
+        var plant = @Html.Raw(Model.intPlantID);
+        var line = @Html.Raw(Model.ProductProcessID);
+        $('.phase1').prop('readonly', true);
+        $('.phase2').prop('readonly', true);
+        $('.reqKPI.phase1').prop('disabled', true);
+        $('.reqSupp.phase1').prop('disabled', true);
+        $('#ysnITAR').prop('disabled', true);
+        $('.btn.phase1').prop('disabled', true);
+
+        $('#ysnITAR:checked').change();
+
+        impactKPIVals = [];
+        impactKPIVals.push("NoEdit");
+        $('#SelectedImpactKPIs').prop('value', impactKPIVals);
+        $('#SelectedSupport').prop('value', impactKPIVals);
+        $('#RemovedAttachments').prop('value', impactKPIVals);
+
+        if ($("#intDINumber").val() != "") {
+            $('#CreateNewDI').prop('disabled', true);
+        }
+
+    });
+
+    //Function on Edit Button Click, unlokc the phase1 Controls
+    function unlockForm() {
+        $('.phase1').prop("readonly", false);
+       
+        $('.reqKPI.phase1').prop('disabled', false);
+        $('.reqSupp.phase1').prop('disabled', false);
+        $('.btn.phase1').prop('disabled', false);
+        $('#ysnITAR').prop('disabled', false);
+        var strStatus = '@Html.Raw(Model.status)';
+
+        if (strStatus == "Active" || strStatus == "Ready to Close") {
+            $('.phase2').prop("readonly", false);
+        }
+
+        if (newVals[0] == "N/A") {
+            $('.reqSupp').prop('disabled', true);
+            $('#N\\/A').prop('disabled', false);
+        }
+
+        // On 'Update' button click > hide 'non editable' text + show 'editable' text - Radu 02.11.2019
+        $('.divNoEditing').removeClass('divShow');
+        $('.divNoEditing').addClass('divHide');
+        $('.divYesEditing').removeClass('divHide');
+        $('.divYesEditing').addClass('divShow');
+
+        // On 'Update' button click > hide the 'Update' button - Radu 02.11.2019
+        $('.buttonUpdateUseCase').addClass('divHide');      // hiding button
+        $('#colVariableWidth').removeClass('col-md-3');     // changing the width of the
+        $('#colVariableWidth').addClass('col-md-6');        //    Use Case Title column
+    }
+
+    // Firing when 'Cancel' form update link is clicked - Radu 02.12.2019
+    //    OK - reloads the page to take you to the state before 'Update' button was hit
+    //    Cancel - gets you out of this function to the state of the page being 'Updated'
+    function cancelFormUpade() {
+        var txt;
+        var r = confirm("Cancel Update of the Use Case");
+        if (r == true) { window.location.reload(); }
+        else { return; }
+    }
+
+    //Build Array of Impact KPI Needed for Use Case
+    //Array is used in Controller to post up to matrix
+    function updateImpactKPIList(checkedOption){
+        oldKPIVals = impactKPIVals;
+        impactKPIVals = [];
+        $('.reqKPI:checked').each(function () {
+            impactKPIVals.push(this.id);
+        });
+        $('#SelectedImpactKPIs').prop('value', impactKPIVals);
+    }
+
+    //Called on Page Load, Prepopulates Checkboxes based on their values
+    function reloadSelectedOptions(){
+        //debugger;
+        var arrOldSelections = JSON.parse('@Html.Raw(Json.Encode(Model.SelectedSupport))');
+        for (var i = 0; i < arrOldSelections.length; i++) {
+            $("[id='"+ arrOldSelections[i] + "']").prop('checked', true);
+            updateSupportList(arrOldSelections[i]);
+        }
+        var arrOldImpactKPIs = JSON.parse('@Html.Raw(Json.Encode(Model.SelectedImpactKPIs))');
+        //console.log(arrOldImpactKPIs);
+        for (var iKPI = 0; iKPI < arrOldImpactKPIs.length; iKPI++) {
+            $("[id='" + arrOldImpactKPIs[iKPI] + "']").prop('checked', true);
+            updateImpactKPIList(arrOldImpactKPIs[iKPI]);
+        }
+    }
+
+    //Build Array of files to Delete on Save
+    function removeFile(fileID) {
+        console.log(fileID)
+        if (confirm("Are you sure you want to remove this file?")) {
+            $("#" + fileID).closest("tr").toggle();
+            filesToRemove.push(fileID);
+            console.log(filesToRemove);
+            $('#RemovedAttachments').prop('value', filesToRemove);
+        }
+        else {
+            return false;
+        }
+    }
+
+    //Build Array of Required Support Needed for Use Case
+    //Array is used in Controller to post up to matrix
+    function updateSupportList(checkedOption) {
+        oldVals = newVals;
+        newVals = [];
+        // console.log("Old Selected Options: " + oldVals);
+        // console.log("Checked Option Param: " + checkedOption);
+        if (checkedOption === "N/A") {
+            var exisits = oldVals.indexOf(checkedOption);
+            if (exisits === -1) {
+                $('.reqSupp').prop('disabled', true);
+                $('.reqSupp').prop('checked', false);
+                $('#strReqSupportOther').prop('value', "");
+                $('#intCAPEXEstimate').prop('value', "");
+                $('#OtherOption').css("display", "none");
+                $('#CapexEstimate').css("display", "none");
+                $('#N\\/A').prop('disabled', false);
+                $('#N\\/A').prop('checked', true);
+            }
+            else {
+                $('.reqSupp').prop('disabled', false);
+            }
+        }
+        else if (checkedOption === "Other") {
+            var exisits = oldVals.indexOf(checkedOption);
+            if (exisits === -1) {
+                $('#OtherOption').css("display", "block");
+            }
+            else {
+                $('#OtherOption').css("display", "none");
+                $('#strReqSupportOther').prop('value', "");
+            }
+        }
+        else if (checkedOption === "CAPEX") {
+            var exisits = oldVals.indexOf(checkedOption);
+            if (exisits === -1) {
+                $('#CapexEstimate').css("display", "block");
+            }
+            else {
+                $('#CapexEstimate').css("display", "none");
+                $('#intCAPEXEstimate').prop('value', "");
+            }
+            $('#status').prop('value', "Under Review");
+        }
+        $('.reqSupp:checked').each(function () {
+            newVals.push(this.id);
+        });
+        $('#SelectedSupport').prop("value", newVals);
+    }
+
+    //Validate File Extension and Display Message
+    //Checks Extension based on list within page
+    function fileValidation() {
+        var fileTypes = []
+        fileTypes = $('#permittedFiles').html().split(', ');
+        console.log(fileTypes);
+        var fileToUpload = $('#Attachment').val();
+        var fileTypeRegEx = new RegExp(fileTypes.join("|", 'gi'));
+        console.log(fileTypeRegEx);
+        if (!fileTypeRegEx.exec(fileToUpload)) {
+            // alert("The File You tried to upload is invalid, please use an accepted file type");
+            $('#errors').html('<div class= "alert alert-danger alert-dismissible fade show" role = "alert" id = "errorMessage" > ' +
+                '<small id="errorMessageText">The File You tried to upload is invalid, please use an accepted file type</small>' +
+                '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                '   <span aria-hidden="true">&times;</span>  </button> </div >');
+            $('#Attachment').val("");
+            $('#strFileType').val("");
+        }
+        else {
+            $('#errors').html('<div class= "alert alert-success alert-dismissible fade show" role = "alert" id = "errorMessage" > ' +
+                '<small id="errorMessageText">Your file has been succesfully attached to the Use Case</small>' +
+                '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                '   <span aria-hidden="true">&times;</span>  </button> </div >');
+            $('#strFileType').val(getExtension(fileToUpload));
+        }
+    }
+
+    //Disables and Clears Any New Attachments
+    function sensitiveUseCase() {
+        var isChecked = $('#ysnITAR').prop('checked');
+        console.log(isChecked);
+        if (isChecked) {
+            $('#errors').html('<div class= "alert alert-warning alert-dismissible fade show" role = "alert" id = "errorMessage" > ' +
+                '<small id="errorMessageText">Due to the sensitivity of the Use Case, you are not permitted to Attach a File at this time</small>' +
+                '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                '   <span aria-hidden="true">&times;</span>  </button> </div >');
+            $('#Attachment').prop("disabled", true);
+            $('#Attachment').val("");
+            $('#strFileType').val("");
+
+            //Add Loop TO Remove Existing Attachments????
+
+        }
+        else
+            $('#Attachment').prop("disabled", false);
+    }
+
+    //On DI Value Update if Manual
+        //Update Status
+        //Disable Create Button
+    function DIUpdate() {
+        $('#status').prop('value', "Active");
+        $('#CreateNewDI').prop('disabled', true);
+        if ($("#intDINumber").val() == "") {
+            $('#status').prop('value', "Draft");
+            $('#CreateNewDI').prop('disabled', false);
+        }
+    }
+
+    //Button for Create New DI
+    //Functionality to Be Determine Later
+    function createNewDI() {
+        confirm('This is when we would link to DI and create a new one');
+        $('#status').prop('value', "Active");
+    }
+
+    function closeUseCase() {
+        $('#status').prop('value', "Complete"); //May change if Use Case Team Determine New Status
+    }
+</script>
+
+<!-- Radu code starts here -->
+<!-- Heading -->
+<div>
+    <span class="fontSize33px fontSegoeUI_Bold">Use Case</span>&nbsp;
+    <span class="boxTeal25Percent fontSize33px fontSegoeUI_Bold">@(Model.intUseCaseID)</span>&nbsp;&nbsp;
+    <span class="fontSize33px fontSegoeUI_Regular">@(Model.strTitle)</span>
+</div>
+<div class="spacer-5px"></div>
+
+<!-- Bread crumbs -->
+<div class="hideOnMobile">
+    <div class="greyLine" style="margin-bottom: 3px;"></div>
+    <span>
+        &nbsp;&nbsp;<i class="fa fa-tags breadcrumbsIcons"></i><span class="greyBoxDarkerMorePadding breadcrumbsText" style="margin-left:6px;">Resources</span>
+    </span>
+    <span>
+        &nbsp;&nbsp;
+        <i class="fa fa-paper-plane breadcrumbsIcons"></i>&nbsp;&nbsp;<a class="breadcrumbsLink" href="@Url.Action("Index", "Home")">Home</a>
+        <i class="fa fa-angle-right active breadcrumbsIcons"></i>&nbsp;<span class="breadcrumbsText">Use Cases</span>
+        <i class="fa fa-angle-right active breadcrumbsIcons"></i>&nbsp;<span class="breadcrumbsText"><strong>View</strong> and or <strong>Update</strong> Existing Use Case</span>
+    </span>
+    <div class="greyLine" style="margin-top: 6px;"></div>
+    <div class="spacer-30px"></div>
+</div>
+
+@using (Html.BeginForm("EditExistingUseCase", "UseCase", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-md-10">
+            <div class="row paddingLeftDesktopOnly_30px paddingRightDesktopOnly_30px">
+                <!-- Update Use Case -->
+                @if (Model.status != "Under Review")
+                {
+                    <div class="col-md-3 buttonUpdateUseCase">
+                        <a href="#" class="cardSmallerTextLightGrey" onclick="unlockForm()">
+                            <div class="card cardSmaller mb-5">
+                                <!-- had: p-3 -->
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <strong>Update </strong><span style="font-weight: 300;">Use Case</span> <span class="colorTeal">@Model.intUseCaseID</span>
+                                    </h5>
+                                    <div class="greyLine"></div>
+                                    <div class="spacer-5px"></div>
+                                    <p class="card-text" style="font-weight: 300;">
+                                        Allows for update of most Use Case fields based on <strong>Business Unit</strong> <i>rules</i> and <i>roles</i>.
+                                    </p>
+                                    <img class="cardArrow" src="https://res.cloudinary.com/arconic/image/upload/v1548790515/GIOS/images/icon_font_awesome_arrow_right_15pt.png" />
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+
+                <div class="col-md-6">
+                    <div class="spacer-10px"></div>
+                    <!-- Use Case ID -->
+                    <div class="row">
+                        <div class="col-md-auto control-label labelGIOS">Use Case <strong>ID</strong><span class="colorGreyLight textColon">:</span></div>
+                        <div class="col noLeftPaddingDesktop labelGIOS">
+                            @(Model.intUseCaseID)
+                            @Html.HiddenFor(model => Model.intUseCaseID)
+                            @Html.ValidationMessageFor(model => model.intUseCaseID, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="greyLine"></div>
+
+                    <!-- DI Number -->
+                    <div class="row">
+                        <div class="col-md-auto control-label labelGrey"><strong>DI</strong> Number<span class="colorGreyLight textColon">:</span></div>
+                        @(Model.intDINumber)
+                        @Html.HiddenFor(model => Model.intDINumber)
+                        @Html.ValidationMessageFor(model => model.intDINumber, "", new { @class = "text-danger" })
+                        @*<label id="CreateNewDI" class="buttonFileUpload" onclick="createNewDI()">
+                                <i class="fas fa-arrow-right colorGreyLightest" style="padding-right: 5px;"></i> Create New DI
+                            </label>*@
+                        <a href="#" id="CreateNewDI" class="linkTeal" onclick="createNewDI()"><i class="fas fa-arrow-right colorGreyLightest" style="padding-right: 5px;"></i>Create New DI</a>
+                    </div>
+                    <div class="greyLine"></div>
+
+                    <!-- Current Status of Use Case -->
+                    <div class="row">
+                        <div class="col-md-auto control-label labelGIOS ">Current <strong>Status</strong> of Use Case<span class="colorGreyLight textColon">:</span></div>
+                        <div class="col noLeftPaddingDesktop labelGIOS">
+                            @(Model.status)
+                            @Html.HiddenFor(model => Model.status)
+                            @Html.ValidationMessageFor(model => model.status, "", new { @class = "text-danger" })
+                        </div>
+                        @if (Model.status == "Ready to Close")
+                        {
+                            <label id="close" class="buttonFileUpload" onclick="closeUseCase()">
+                                <i class="fas fa-arrow-right colorGreyLightest" style="padding-right: 5px;"></i> Close Use Case
+                            </label>
+                        }
+                    </div>
+                    <div class="greyLine"></div>
+
+                    <!-- Use Case SPA -->
+                    <div class="row">
+                        <div class="col-md-auto control-label labelGIOS">Use Case <strong>SPA</strong><span class="colorGreyLight textColon">:</span></div>
+                        <div class="col noLeftPaddingDesktop labelGIOS">
+                            @(Model.strUseCaseSPA)
+                            @Html.HiddenFor(model => model.strUseCaseSPA)
+                            @Html.ValidationMessageFor(model => model.strUseCaseSPA, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="greyLine"></div>
+                </div>
+
+                <div id="colVariableWidth" class="col-md-3">
+                    <div class="spacer-20px"></div>
+                    <div class="greyLine"></div>
+
+                    <!-- Use Case Title - character limit: 50 -->
+                    <div class="col-md-auto control-label labelGIOS">Use Case <strong>Title</strong><span class="colorGreyLight textColon">:</span></div>
+                    <div class="col noLeftPaddingDesktop labelGIOS">
+                        <!-- at page load - show 'non editable' text -->
+                        <div class="divNoEditing divShow">
+                            @(Model.strTitle)
+                        </div>
+                        <!-- at 'Update Use Case' button click - show 'editable' text inside text box or text area -->
+                        <div class="divYesEditing divHide">
+                            @Html.TextAreaFor(model => model.strTitle, htmlAttributes: new { @class = "form-control phase1", @rows = "3" })
+                            @Html.ValidationMessageFor(model => model.strTitle, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="greyLine"></div>
+
+                    <!-- Problem Description - character limit: 150 -->
+                    <div class="col-md-auto control-label labelGIOS">Problem <strong>Description</strong><span class="colorGreyLight textColon">:</span></div>
+                    <div class="col noLeftPaddingDesktop labelGIOS">
+                        <!-- at page load - show 'non editable' text -->
+                        <div class="divNoEditing divShow">
+                            @(Model.strDescription)
+                        </div>
+                        <!-- at 'Update Use Case' button click - show 'editable' text inside text box or text area -->
+                        <div class="divYesEditing divHide">
+                            @Html.TextAreaFor(model => model.strDescription, htmlAttributes: new { @class = "form-control phase1", @rows = "6" })
+                            @Html.ValidationMessageFor(model => model.strDescription, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-2 hideOnMobile">
+            <ul class="rightSideLinksUL verticalLine">
+                <li class="rightSideLinksLI">
+                    <a href="@Url.Action("Index", "UseCase")" class="linkRightSide">Home</a>
+                </li>
+                <li class="">
+                    <a href="#" class="linkRightSide">Update Use Case</a>
+                </li>
+                <li class="toc-entry toc-h2">
+                    <a href="#" class="linkRightSide">Search</a>
+                </li>
+                <li class="toc-entry toc-h2">
+                    <a href="@Url.Action("Index","Admin")" class="linkRightSide">Admin</a>
+                </li>
+                <li>
+                    <a href="#" class="linkTeal" onclick="cancelFormUpade()"><i class="fas fa-arrow-right colorGreyLightest" style="padding-right: 5px;"></i>Cancel</a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Radu code ends here -->
+
+    <!-- Update Use Case - button -->
+    @*
+        <row>
+            <h2>Use Case</h2>
+            @if (Model.status != "Under Review")
+            {
+                <button type="button" onclick="unlockForm()" class="btn-dark btn"> Edit Exisiting Data</button>
+            }
+        </row>
+    *@
+
+    <div class="form-horizontal">
+        <!-- Use Case ID -->
+        @*
+            <div class="form-group">
+                @Html.LabelFor(model => model.intUseCaseID, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.intUseCaseID, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                    @Html.ValidationMessageFor(model => model.intUseCaseID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        *@
+
+        <!-- DI Number -->
+        @*
+            <div class="form-group">
+                @Html.LabelFor(model => model.intDINumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.intDINumber, ViewBag.EditPhase2 ? (object)new { htmlAttributes = new { @class = "form-control", onfocusout = "DIUpdate()" } } : new { htmlAttributes = new { @class = "form-control phase2" } })
+                    @Html.ValidationMessageFor(model => model.intDINumber, "", new { @class = "text-danger" })
+                </div>
+                <button id="CreateNewDI" type="button" onclick="createNewDI()"> Create New DI </button>
+            </div>
+        *@
+
+        <!-- Current Status of Use Case -->
+        @*
+            <div class="form-group">
+                @Html.LabelFor(model => model.status, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.status, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                    @Html.ValidationMessageFor(model => model.status, "", new { @class = "text-danger" })
+                </div>
+                @if (Model.status == "Ready to Close")
+                {
+                    <button id="close" type="button" onclick="closeUseCase()"> Close Use Case </button>
+                }
+            </div>
+        *@
+
+        <!-- Use Case SPA -->
+        @*
+            <div class="form-group">
+                @Html.LabelFor(model => model.strUseCaseSPA, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.strUseCaseSPA, new { htmlAttributes = new { @class = "form-control phase1" } })
+                    @Html.ValidationMessageFor(model => model.strUseCaseSPA, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        *@
+
+        <!-- Use Case Title -->
+        @**@
+        <div class="form-group">
+            @Html.LabelFor(model => model.strTitle, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.strTitle, new { htmlAttributes = new { @class = "form-control phase1" } })
+                @Html.ValidationMessageFor(model => model.strTitle, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <!-- Problem Description -->
+        @**@
+        <div class="form-group">
+            @Html.LabelFor(model => model.strDescription, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.strDescription, new { htmlAttributes = new { @class = "form-control phase1" } })
+                @Html.ValidationMessageFor(model => model.strDescription, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.strHypothesis, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.strHypothesis, new { htmlAttributes = new { @class = "form-control phase1" } })
+                @Html.ValidationMessageFor(model => model.strHypothesis, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.DropDownListFor(model => model.strBUID, new SelectList(Model.businessUnits.Select(m => m.strBUID)), "Select BU", new { id = "select_BU", @disabled = true, onchange = "populateDDL('Segment', this)" })
+
+            @Html.DropDownListFor(model => model.strSegmentID, new SelectList(new List<SelectListItem>(), "Value", "Text"), Model.strSegmentID, new { id = "select_Segment", @disabled = true, onchange = "populateDDL('Plant', this)" })
+
+            @Html.DropDownListFor(model => model.intPlantID, new SelectList(new List<SelectListItem>(), "Value", "Text"), Model.strPlantName, new { id = "select_Plant", @disabled = true, onchange = "getLineDDLForUseCase('Line', this)" })
+
+            @Html.DropDownListFor(model => model.ProductProcessID, new SelectList(new List<SelectListItem>(), "Value", "Text"), Model.strLineID, new { id = "select_Line", @disabled = true, onchange = "activateFields()" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.strAssests, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.strAssests, new { htmlAttributes = new { @class = "form-control phase1" } })
+                @Html.ValidationMessageFor(model => model.strAssests, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.strTeam, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.strTeam, new { htmlAttributes = new { @class = "form-control phase1" } })
+                @Html.ValidationMessageFor(model => model.strTeam, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.fltIdeaEstimate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.fltIdeaEstimate, new { htmlAttributes = new { @class = "form-control phase1", @type = "number" } })
+                @Html.ValidationMessageFor(model => model.fltIdeaEstimate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.strImpactCalculation, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.strImpactCalculation, new { htmlAttributes = new { @class = "form-control phase1" } })
+                @Html.ValidationMessageFor(model => model.strImpactCalculation, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group" id="checkbox_ImpactKPI">
+            @Html.Label("KPI's Expected to be Impacted", htmlAttributes: new { @class = "control-label col-md-3" })
+            @foreach (var item in Model.ImpactKPIs)
+            {
+                <div class="form-check-inline">
+                    @Html.CheckBoxFor(model => item.isSelected, htmlAttributes: new { @onclick = "updateImpactKPIList(this.id)", @id = @item.strKPI, @class = "reqKPI phase1" })
+                    @Html.Label(item.strKPI, htmlAttributes: new { @class = "control-label col-md-3" })
+                    @Html.HiddenFor(model => item.strKPI)
+                </div>
+            }
+        </div>
+        @Html.HiddenFor(model => model.SelectedImpactKPIs, new { htmlAttributes = new { @class = "form-control" } })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ysnITAR, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.ysnITAR, new { htmlAttributes = new { @onchange = "sensitiveUseCase()", @class = "phase1" } })
+                    @Html.ValidationMessageFor(model => model.ysnITAR, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div id="errors">
+
+        </div>
+        <table class="table table-bordered">
+            <tr>
+                <th class="col-md-2">
+                    @Html.DisplayNameFor(model => model.Attachment)
+                </th>
+                <th class="col-md-2"></th>
+                <th class="col-md-2"></th>
+            </tr>
+            @foreach (var item in Model.useCaseAttachments)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.strFileName) </td>
+                    @*<td>@Html.ActionLink("Download", "DownloadFile", "UseCase", new { id = item.lngRecordID })</td>*@
+                    <td>@Html.ActionLink("Download", "DownloadFile", "UseCase", new { intFileID = item.lngRecordID }, null)</td>
+                    <td><button class="btn phase1" type="button" onclick="removeFile(this.id)" id="@item.lngRecordID"> Remove</button></td>
+                </tr>
+            }
+        </table>
+
+        <div class="form-group" id="AttachmentLabel">
+            @Html.LabelFor(model => model.Attachment, htmlAttributes: new { @class = "control-label col-md-2", id = "FileTypeLabel" })
+            <small class="form-text text-muted">
+                Permitted Files: <span id="permittedFiles">@String.Join(", ", Model.supportedFileTypes.Select(m => m.strFileType).ToArray())</span>
+            </small>
+            <div class="col-md-10">
+                <input type="file" id="Attachment" name="files" multiple onchange="fileValidation()" class="phase1" />
+            </div>
+        </div>
+        @Html.HiddenFor(model => model.RemovedAttachments, new { htmlAttributes = new { @class = "form-control" } })
+
+
+        <div class="form-group" id="checkbox_RequiredSupport">
+            @Html.Label("Required Support Needed?", htmlAttributes: new { @class = "control-label col-md-2" })
+            @foreach (var item in Model.RequiredSupportTypes)
+            {
+                <div class="form-check-inline">
+                    @Html.CheckBoxFor(model => item.isSelected, htmlAttributes: new { @onclick = "updateSupportList(this.id)", @id = @item.strSupportType, @class = "reqSupp phase1" })
+                    @Html.Label(item.strSupportType, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.HiddenFor(model => item.strSupportType)
+                </div>
+            }
+        </div>
+        <div class="form-group row" id="CapexEstimate" style="display:none">
+            @Html.LabelFor(model => model.intCAPEXEstimate, htmlAttributes: new { @class = "col-form-label col-md-2" })
+            @Html.EditorFor(model => model.intCAPEXEstimate, new { htmlAttributes = new { @class = "form-control col-md-5 phase1" } })
+        </div>
+        <div class="form-group" id="OtherOption" style="display:none">
+            @Html.EditorFor(model => model.strReqSupportOther, new { htmlAttributes = new { @class = "form-control phase1" } })
+        </div>
+        @Html.HiddenFor(model => model.SelectedSupport, new { htmlAttributes = new { @class = "form-control" } })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.strAutomationCategory, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.strAutomationCategory, ViewBag.EditPhase2 ? (object)new { htmlAttributes = new { @class = "form-control" } } : new { htmlAttributes = new { @class = "form-control phase2" } })
+                @Html.ValidationMessageFor(model => model.strAutomationCategory, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @if (Model.status == "Ready to Close" || Model.status == "Complete")
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.strLessonsLearned, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.strLessonsLearned, ViewBag.Readonly ? (object)new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } } : new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.strLessonsLearned, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.fltTotInvestment, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.fltTotInvestment, ViewBag.Readonly ? (object)new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } } : new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.fltTotInvestment, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.strTechnologyProvider, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.strTechnologyProvider, ViewBag.Readonly ? (object)new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } } : new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.strTechnologyProvider, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        }
+
+
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.strCreatorID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.strCreatorID, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                @Html.ValidationMessageFor(model => model.strCreatorID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.dtmModified, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.dtmModified, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                @Html.ValidationMessageFor(model => model.dtmModified, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.strModifierID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.strModifierID, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                @Html.ValidationMessageFor(model => model.strModifierID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        @if (Model.status != "Under Review")
+        {
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+        }
+        <!-- Cancel link -->
+        <div>
+            <a href="#" class="linkTeal" onclick="cancelFormUpade()"><i class="fas fa-arrow-right colorGreyLightest" style="padding-right: 5px;"></i>Cancel</a>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to Use Case Home", "Index")
+</div>

@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>Welcome to GIOS</h1>
+    <p class="lead">
+        Global Intelligence Operating System Smart. Create a digital platform to enable operational continuous improvements and advance Smart manufacturing through People and Technology
+    </p>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <h2>Getting started</h2>
+        <p>
+            Are you a Plant Manger Looking to get started on your Smart Journey, this is place for you
+        </p>
+        <p><button class="btn btn-default">Learn more &raquo;</button></p>
+    </div>
+    <div class="col-md-3">
+        <h2>MIOS <br /></h2>
+        <h5>(Manufacutring Intelligence Operating Systems)</h5>
+        <p>Enter KPI Data and View the overall health of a Location, Line or Process across Arconic</p>
+        <p><button class="btn btn-default" onclick="window.location='@Url.Action("DataEntry", "Mios")'">Learn more &raquo;</button></p>
+    </div>
+    <div class="col-md-3">
+        <h2>Use Case</h2>
+        <p>Have an idea on how to save your BU Time, or Money submit your idea here and let the your BU's COE know</p>
+        <p><a class="btn btn-default" onclick="window.location='@Url.Action("Index", "UseCase")'">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-3">
+        <h2>Training</h2>
+        <p>Learn More about a given role, or competancy. See what knowledge gaps you have and get recommended training to fill them</p>
+        <p><a class="btn btn-default" onclick="window.location='@Url.Action("Index", "Training")'">Learn more &raquo;</a></p>
+    </div>
+</div>

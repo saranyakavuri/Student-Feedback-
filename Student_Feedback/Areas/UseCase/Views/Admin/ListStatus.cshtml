@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Gios_mvcSolution.Areas.UseCase.Models.Status>
+<h4>Create / Modify Status' for a Use Case</h4>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.strStatus)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.yesActive)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dtmCreated)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strCreatorID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dtmModified)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strModifierID)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.strStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.yesActive)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.dtmCreated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strCreatorID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.dtmModified)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strModifierID)
+            </td>
+            <td>
+                <button class="btn btn-default" onclick="loadPartialStatusView('Edit', this.id)" id="@item.strStatus"> Edit</button>
+                <button class="btn btn-default" onclick="loadPartialStatusView('Delete', this.id)" id="@item.strStatus"> Remove</button>
+            </td>
+        </tr>
+    }
+
+</table>
+<hr />
+<div>
+    @* @Html.ActionLink("Create New", "Create", null, new { @id = "Create" })*@
+    <button class="btn btn-dark" onclick="loadPartialStatusView('Create', this.id)" id="Create"> Create New Status</button>
+</div>

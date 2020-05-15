@@ -1,0 +1,204 @@
+﻿@{
+    ViewBag.Title = "Create New Use Case";
+    ViewBag.Description = "Create New Use Case - allows for creation, setting of new use case values and file attachment";
+}
+
+<script>
+    var oldVals = [];
+    var newVals = [];
+    // var fileTypes = [];
+    var impactKPIVals = [];
+    var oldKPIVals = [];
+
+    function activateFields() {
+        $('#strAssests').prop('disabled', false);
+        $('#strTeam').prop('disabled', false);
+    }
+
+    function updateImpactKPIList(checkedOption) {
+        oldKPIVals = impactKPIVals;
+        impactKPIVals = [];
+        $('.reqKPI:checked').each(function () {
+            impactKPIVals.push(this.id);
+        });
+        $('#SelectedImpactKPIs').prop('value', impactKPIVals);
+    }
+
+    function updateSupportList(checkedOption) {
+        oldVals = newVals;
+        newVals = [];
+       // console.log("Old Selected Options: " + oldVals);
+       // console.log("Checked Option Param: " + checkedOption);
+        if (checkedOption === "N/A") {
+            var exisits = oldVals.indexOf(checkedOption);
+            if (exisits === -1) {
+                $('.reqSupp').prop('disabled', true);
+                $('.reqSupp').prop('checked', false);
+                $('#strReqSupportOther').prop('value', "");
+                $('#intCAPEXEstimate').prop('value', "");
+                $('#OtherOption').css("display", "none");
+                $('#CapexEstimate').css("display", "none");
+                $('#N\\/A').prop('disabled', false);
+                $('#N\\/A').prop('checked', true);
+                $('#status').prop('value', "Draft");
+            }
+            else {
+                $('.reqSupp').prop('disabled', false);
+                $('#status').prop('value', "Draft");
+            }
+        }
+        else if (checkedOption === "Other") {
+            var exisits = oldVals.indexOf(checkedOption);
+            if (exisits === -1) {
+                $('#OtherOption').css("display","block");
+            }
+            else {
+                $('#OtherOption').css("display","none");
+                $('#strReqSupportOther').prop('value', "");
+            }
+            $('#status').prop('value', "Under Review");
+        }
+        else if (checkedOption === "CAPEX") {
+            var exisits = oldVals.indexOf(checkedOption);
+            if (exisits === -1) {
+                $('#CapexEstimate').css("display", "block");
+            }
+            else {
+                $('#CapexEstimate').css("display", "none");
+                $('#intCAPEXEstimate').prop('value', "");
+            }
+            $('#status').prop('value', "Under Review");
+        }
+        $('.reqSupp:checked').each(function () {
+            newVals.push(this.id);
+        });
+        //$('#status').prop('value', "Under Review");
+        $('#SelectedSupport').prop("value", newVals);
+       // console.log("List of Selected Options: " + newVals);
+    }
+
+    function getSupportedFileTypes() {
+        var obj = { id: "FileTypes" }
+        fileTypes = [];
+        AjaxCall('/UseCase/Admin/FileTypeList', JSON.stringify(obj), 'POST').done(function (response) {
+            if (response.length > 0) {
+                for (var i = 0; i < response.length; i++) {
+                    fileTypes.push('.' + response[i].strFileType);
+                }
+                $('#AttachmentLabel').append('<small class="form-text text-muted"> Permitted Files: ' + fileTypes.join() + '</small>');
+            }
+        }).fail(function (error) {
+            alert(error.StatusText);
+        });
+    }
+
+    function fileValidation() {
+        var fileTypes = []
+        fileTypes = $('#permittedFiles').html().split(', ');
+        console.log(fileTypes);
+        var fileToUpload = $('#file-upload').val();
+        var fileTypeRegEx = new RegExp(fileTypes.join("|", 'gi'));
+        console.log(fileTypeRegEx);
+        if (!fileTypeRegEx.exec(fileToUpload)) {
+            // alert("The File You tried to upload is invalid, please use an accepted file type");
+            $('#errors').html('<div class= "alert alert-danger alert-dismissible fade show" role = "alert" id = "errorMessage" > ' +
+                '<small id="errorMessageText">The File You tried to upload is invalid, please use an accepted file type</small>' +
+                '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                '   <span aria-hidden="true">&times;</span>  </button> </div >');
+            $('#Attachment').val("");
+            $('#strFileType').val("");
+        }
+        else {
+            $('#errors').html('<div class= "alert alert-success alert-dismissible fade show" role = "alert" id = "errorMessage" > ' +
+                '<small id="errorMessageText">Your file has been succesfully attached to the Use Case</small>' +
+                '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                '   <span aria-hidden="true">&times;</span>  </button> </div >');
+            $('#strFileType').val(getExtension(fileToUpload));
+        }
+    }
+
+    function getExtension(path) {
+        var basename = path.split(/[\\/]/).pop(),  // extract file name from full path ...
+            // (supports `\\` and `/` separators)
+            pos = basename.lastIndexOf(".");       // get last position of `.`
+        if (basename === "" || pos < 1)            // if file name is empty or ...
+            return "";                             //  `.` not found (-1) or comes first (0)
+
+        return basename.slice(pos + 1);            // extract extension ignoring `.`
+    }
+
+    function sensitiveUseCase() {
+        var isChecked = $('#ysnITAR').prop('checked');
+        console.log(isChecked);
+        if (isChecked) {
+            //$('#errorMessage').html('Due to the sensitivity of the Use Case, you are not permitted to Attach a File at this time');
+            //$('#errorMessage').prop("visibilty", true);
+            $('#errors').html('<div class= "alert alert-warning alert-dismissible fade show" role = "alert" id = "errorMessage" > ' +
+                '<small id="errorMessageText">Due to the sensitivity of the Use Case, you are not permitted to Attach a File at this time</small>' +
+                '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                '   <span aria-hidden="true">&times;</span>  </button> </div >');
+            $('#Attachment').prop("disabled", true);
+            $('#Attachment').val("");
+            $('#strFileType').val("");
+        }
+        else
+            $('#Attachment').prop("disabled", false);
+    }
+
+    // Shows KPI Definition div on KPI link click - Radu 02.12.2019 issue 160
+    function showKPIDefinition(id) {
+        $("[id=div_" + id + "]").toggle(); // toggles visibility on div
+        //$("[id=div_" + id + "]").removeClass('divHide'); 
+        //$("[id=div_" + id + "]").addClass('divShow'); 
+    }
+</script>
+
+<!-- Heading -->
+<div>
+    @*<i class="fas fa-vector-square fontAwesomePageTitle"></i>*@
+    <span class="fontSegoeUI_Bold">Create</span>
+    <span class="boxTeal25Percent fontSize33px fontSegoeUI_Bold">New</span>
+    <span class="fontSize33px fontSegoeUI_Regular">Use Case</span>
+</div>
+<div class="spacer-5px"></div>
+
+<!-- bread crumbs -->
+<div class="hideOnMobile">
+    <div class="greyLine" style="margin-bottom: 3px;"></div>
+    <span>
+        &nbsp;&nbsp;<i class="fa fa-tags breadcrumbsIcons"></i><span class="greyBoxDarkerMorePadding breadcrumbsText" style="margin-left:6px;">Resources</span>
+    </span>
+    <span>
+        &nbsp;&nbsp;
+        <i class="fa fa-paper-plane breadcrumbsIcons"></i>&nbsp;&nbsp;<a class="breadcrumbsLink" href="@Url.Action("Index", "Home")">Home</a>
+        <i class="fa fa-angle-right active breadcrumbsIcons"></i>&nbsp;<span class="breadcrumbsText">Use Cases</span>
+        <i class="fa fa-angle-right active breadcrumbsIcons"></i>&nbsp;<span class="breadcrumbsText">Create New Use Case</span>
+    </span>
+    <div class="greyLine" style="margin-top: 6px;"></div>
+    <div class="spacer-30px"></div>
+</div>
+
+<div class="row">
+    <div class="col-md-10">
+        <!-- link below goes to 'UseCaseController.cs' which feeds 'Phase1.cshtml' partial -->
+        <div>@Html.Action("Phase1", "UseCase")</div>
+    </div>
+    <div class="col-md-2 hideOnMobile">
+        <ul class="rightSideLinksUL verticalLine">
+            <li class="rightSideLinksLI">
+                <a href="@Url.Action("Index", "UseCase")" class="linkRightSide">Home</a>
+                @*@Html.ActionLink("Back to List", "Index")*@
+            </li>
+            <li class="">
+                <a href="#" class="linkRightSide">Update Use Case</a>
+            </li>
+            <li class="toc-entry toc-h2">
+                <a href="#" class="linkRightSide">Search</a>
+            </li>
+            <li class="toc-entry toc-h2">
+                <a href="@Url.Action("Index","Admin")" class="linkRightSide">Admin</a>
+            </li>
+        </ul>
+    </div>
+</div>
+

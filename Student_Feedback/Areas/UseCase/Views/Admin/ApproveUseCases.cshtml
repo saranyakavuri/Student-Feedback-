@@ -1,0 +1,116 @@
+﻿@model IEnumerable<Gios_mvcSolution.Areas.UseCase.Models.UseCaseApprovals>
+
+@{
+    ViewBag.Title = "Approve Use Cases";
+}
+@*<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/black-tie/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+        integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+        crossorigin="anonymous"></script>*@
+<script>
+    function approveReject(buttonID, buttonAction) {
+        console.log(buttonID);
+        console.log(buttonAction);
+        if (buttonAction == "Rejected") {
+            var strComments = prompt("Please enter reasons for Rejection: ");
+            console.log(strComments);
+            var obj = { strUseCaseID: buttonID, strStatus: buttonAction, strComments: strComments };
+        }
+        else if (buttonAction == "Approved") {
+            var obj = { strUseCaseID: buttonID, strStatus: buttonAction, strComments: "" };
+        }
+        AjaxCall('/UseCase/UseCase/ApproveRejectUseCase', JSON.stringify(obj), 'POST').done(function (response) {
+                console.log(response);
+            window.location.reload();
+            }).fail(function (error) {
+                alert(error.StatusText);
+            });
+    }
+
+</script>
+<h2>ApproveUseCases</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.intUseCaseID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strUseCaseTitle)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strUseCaseDescr)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strBUID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ysnApproved)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strComments)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dtmCreated)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strCreatorID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dtmApproved)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strApproverID)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.intUseCaseID)
+            </td>
+            <th>
+                @Html.ActionLink(item.strUseCaseTitle, "EditExistingUseCase", "UseCase", new { useCaseID = item.intUseCaseID }, new { @target="_blank"})
+            </th>
+            <th>
+                @Html.DisplayFor(modelItem => item.strUseCaseDescr)
+            </th>
+            <td>
+                @Html.DisplayFor(modelItem => item.strBUID)
+            </td>
+            <td>
+                @if (item.ysnApproved == "Approved")
+                {
+                    <h6>Approved</h6>
+                }
+                else if (item.ysnApproved == "Rejected")
+                {
+                    <h6>Rejected</h6>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-success" id="@Html.Raw(item.intUseCaseID)" value="Approved" onclick="approveReject(this.id, this.value)"> Approve Use Case</button>
+                    <button type="button" class="btn btn-danger" id="@Html.Raw(item.intUseCaseID)" value="Rejected" onclick="approveReject(this.id, this.value)"> Reject Use Case</button>
+                }
+                @*@Html.DisplayFor(modelItem => item.ysnApproved)*@
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strComments)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.dtmCreated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strCreatorID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.dtmApproved)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strApproverID)
+            </td>
+        </tr>
+    }
+
+</table>

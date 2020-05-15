@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Gios_mvcSolution.Models.BUSegment>
+
+<h2>Create / Modify BU Segments</h2>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.strSegmentID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strSegmentDescr)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strBUID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dtmCreated)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strCreatorID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dtmModified)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strModifierID)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.strSegmentID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strSegmentDescr)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strBUID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.dtmCreated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strCreatorID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.dtmModified)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strModifierID)
+            </td>
+            <td>
+                @*//@Html.ActionLink("Edit", "EditBU", new { id=item.strBUID  }) |*@
+                <button class="btn btn-default" onclick="loadPartialSegView('Edit', this.id)" id="@item.strSegmentID">Edit</button>|
+                <button class="btn btn-default" onclick="loadPartialSegView('Delete', this.id)" id="@item.strSegmentID">Remove</button>
+            </td>
+        </tr>
+    }
+
+</table>
+<hr />
+<div>
+    @* @Html.ActionLink("Create New", "Create", null, new { @id = "Create" })*@
+    <button class="btn btn-dark" onclick="loadPartialSegView('Create', this.id)" id="Create"> Create New Segment</button>
+</div>
+
+

@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Gios_mvcSolution.Areas.UseCase.Models.CompassCat>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.strCategoryID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strCategoryDescr)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dtmCreated)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strCreatorID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dtmModified)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strModifierID)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.strCategoryID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strCategoryDescr)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.dtmCreated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strCreatorID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.dtmModified)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strModifierID)
+            </td>
+            <td>
+                <button class="btn btn-default" onclick="loadPartialCompassCatView('Edit', this.id)" id="@item.strCategoryID"> Edit</button>
+                <button class="btn btn-default" onclick="loadPartialCompassCatView('Delete', this.id)" id="@item.strCategoryID"> Remove</button>
+            </td>
+        </tr>
+    }
+
+</table>
+<hr />
+<div>
+    @* @Html.ActionLink("Create New", "Create", null, new { @id = "Create" })*@
+    <button class="btn btn-dark" onclick="loadPartialCompassCatView('Create', this.id)" id="Create"> Create New Compass Category</button>
+</div>

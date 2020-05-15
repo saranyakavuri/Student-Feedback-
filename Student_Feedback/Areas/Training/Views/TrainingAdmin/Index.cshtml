@@ -1,0 +1,1170 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+<head>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.8/css/jquery.dataTables.min.css">
+</head>
+<style>
+
+
+    .modal-body {
+        height: 300px;
+        overflow-y: auto;
+    }
+
+    .modal-lg {
+        max-width: 60%;
+    }
+</style>
+
+
+@*<link rel="stylesheet" type="text/javascript" https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css>
+    <link rel="stylesheet" type="text/javascript" https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css>*@
+
+
+@*<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>*@
+
+<div id="root">
+    @* Debmalya *@
+    <div class="container" id="takeTraining" style="padding-top:2vh">
+        <div class="row">
+            <div class="col shadow p-3 mb-5 bg-white rounded">
+                <!--<div class="card" style="width: 30rem;">-->
+                <div class="card-body" style="width: 25rem;">
+                    @*<h6 class="card-subtitle">Please Choose Either Roles or Competencies</h6>*@
+                    <br />
+                    <form>
+                        <div class="form-group">
+                            <div class="row"><div><button type="button" value="Roles" id="roleid" class="btn btn-info btn-lg btn-block">Roles</button></div></div>
+
+                        </div>
+
+                    </form>
+                </div>
+                <!--</div>-->
+            </div>
+            <div id="loaderDiv">
+                @*<h4 style="text-align:justify">..Loading..</h4>*@
+            </div>
+            <div class="col"></div>
+            <div class="col shadow p-3 mb-5 bg-white rounded">
+                <div class="card-body" style="width: 25rem;">
+                    @*<h6 class="card-subtitle"></h6>*@
+                    <br />
+                    <form>
+                        <div class="form-group">
+                            <div class="row"><div><button type="button" value="Competency" id="compid" class="btn btn-info btn-lg btn-block">Competency</button></div></div>
+
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            <div id="loaderDiv">
+                @*<h4 style="text-align:justify">..Loading..</h4>*@
+            </div>
+            <div class="col"></div>
+            <div class="col shadow p-3 mb-5 bg-white rounded">
+                <div class="card-body" style="width: 25rem;">
+                    @*<h6 class="card-subtitle"></h6>*@
+                    <br />
+                    <form>
+                        <div class="form-group">
+                            <div class="row"><div><button type="button" value="Training" id="trainingId" class="btn btn-info btn-lg btn-block">Training</button></div></div>
+
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    @* Saranya *@
+    @*<div class="container" id="takeTraining" style="padding-top:2vh">*@
+    @*<div class="row">
+        <div class="col shadow p-3 mb-5 bg-white rounded">*@
+    <!--<div class="card" style="width: 30rem;">-->
+    @*<div class="card-body" style="width: 25rem;">*@
+    @*<h6 class="card-subtitle">Please Choose Either Roles or Competencies</h6>*@
+    @*<br />
+            <form>
+                <div class="form-group">
+                    <div class="row"><div><button type="button" value="Roles" id="roleid" class="btn btn-info btn-lg btn-block">Roles</button></div></div>
+
+                </div>
+
+            </form>
+        </div>*@
+    <!--</div>-->
+    @*</div>*@
+    @*<div id="loaderDiv">*@
+    @*<h4 style="text-align:justify">..Loading..</h4>*@
+    @*</div>
+        <div class="col"></div>*@
+    @*<div class="col shadow p-3 mb-5 bg-white rounded">
+        <div class="card-body" style="width: 25rem;">*@
+    @*<h6 class="card-subtitle"></h6>*@
+    @*<br />
+                <form>
+                    <div class="form-group">
+                        <div class="row"><div><button type="button" value="Competency" id="compid" class="btn btn-info btn-lg btn-block">Competency</button></div></div>
+
+                    </div>
+                </form>
+            </div>
+        </div>*@
+    @*</div>*@
+    @*  </div>*@
+</div>
+
+<div id="rolehistory" class="container" style="padding-top:2vh;display:none;">
+    @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+            Create Role
+        </button>*@
+    <button type="button" value="add" id="btnCreateRole" class="btn btn-success btn-rounded" style="margin-top: 20px;">Create Role</button>
+    <div>
+        <div class="row">
+
+            <div class="col-sm-10">
+                <h5 class="display-4" style="text-align:center">Role Details</h5>
+            </div>
+            <div class="col">
+                <input type="button" value="Home" id="Home" class="btn btn-primary" style="margin-top: -70px;" />
+            </div>
+        </div>
+    </div>
+
+
+
+    <table id="roleDetailTable" class="table table-bordered table-hover" cellspacing="0" style="width:100%">
+        <thead>
+            <tr class="thead-dark">
+                <th scope="col" align="center">Role</th>
+                <th scope="col" align="center">Role Description</th>
+                @*<th scope="col">Competency</th>
+                    <th scope="col">Level</th>*@
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody id="roleDetailTableBody"></tbody>
+    </table>
+</div>
+<div id="comphistory" class="container" style="padding-top:2vh;display:none;">
+    <div>
+
+        <h6 style="text-align:left">
+            <button type="button" id="createCompetencyBtn" class="btn btn-info btn-lg" data-toggle="modal">
+                Create New
+            </button>
+        </h6>
+
+        @*<h6 style="text-align:right;padding-left:6px"><input type="button" value="ViewCompetency" id="Viewcomp" /></h6>*@
+        <div class="row">
+
+            <div class="col-sm-10">
+                <h5 class="display-4" style="text-align:center">Comp Details</h5>
+            </div>
+            <div class="col">
+                <input type="button" value="Home" id="BackHome" class="btn btn-primary btn-sm Home" />
+            </div>
+
+            <div class="col-md-8">
+                <table id="competencyNames" class="table table-striped table-bordered" cellspacing="0" style="width:100%" border="1">
+                    <thead>
+                        <tr class="thead-dark">
+                            <th scope="col" align="center">CompID</th>
+                            <th scope="col" align="center">CompName</th>
+                            <th scope="col">Action1</th>
+                            <th scope="col">Action2</th>
+                        </tr>
+
+                    </thead>
+                    <tbody id="compbody"></tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="createCompetencyModal">
+    @*//modal-dialog-centered*@
+    <div class="modal-dialog modal-lg ">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title" id="compModalTitle">Create Competency</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+
+            <div class="modal-body" style="padding-top:1px;">
+                <form>
+                    <div style="align-self:center">
+                        @*<small class="form-text text-muted" style="color:red">* marked fields are mandatory</small>*@
+                        <span style="color:red">* marked fields are mandatory</span>
+                    </div>
+                    <div class="form-group" style="padding-top:2vh;">
+                        <label for="exampleInputEmail1"><b><span style="color:red"> * </span> Competency Name :</b></label>
+                        <input type="email" class="form-control" id="compName" aria-describedby="emailHelp" placeholder="Enter name">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1"><b><span style="color:red"> * </span>Competency Description :</b></label>
+                        <textarea class="form-control" rows="5" style="min-width: 80%" id="compDescription" placeholder="Enter description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="button" value="Add Question" id="addCompetencyQuestions" />
+                    </div>
+                    <div class="form-group" id="comptencyQuestionContainer">
+
+                    </div>
+                </form>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" value="save" id="saveCompDetails" class="btn btn-success">Submit</button>
+                @*<button type="button" value="save" id="saveCompDetails" class="btn btn-primary" style="margin-top: 20px;margin-left:20px;padding-left:20px">Submit</button>*@
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header text-center" id="dupRolemsg">
+                <h4 class="modal-title w-100">Role Details</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+
+            <div class="modal-body" id="addRole" class="container" style="padding-top:2vh;">
+                Role name: <input type="text" class="form-control" id="roleNameId" name="RoleName" required><br>
+                Role Description:<input type="text" class="form-control" id="roleDescription" name="RoleName"><br>
+                Select Competencies:<table class="table table-bordered" id="compDeatailsTable">
+                    <thead>
+                        <tr class="thead-dark">
+                            <th scope="col">Name</th>
+                            <th scope="col">Check/Uncheck</th>
+                            <th scope="col">Level</th>
+                        </tr>
+                    </thead>
+                    <tbody id="compDeatailsTableBody"></tbody>
+                </table>
+                @*<button type="button" value="save" id="btnSaveRole" class="btn btn-success btn-lg" style="margin-top: 20px;">Save Role Details</button>*@
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" value="save" id="btnSaveRole" class="btn btn-success">Save Role Details</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div id="trainingDetailId" class="container" style="padding-top:2vh;display:none;">
+    <div>
+        <div class="row">
+
+            <div class="col-sm-10">
+                <h5 class="display-4" style="text-align:center">Training Details</h5>
+            </div>
+            <div class="col">
+                <input type="button" value="Home" id="BackHome" class="btn btn-primary btn-sm Home" />
+            </div>
+        </div>
+    </div>
+    Training name: <input type="text" id="trainingNameId" name="RoleName"><br>
+    Training Description:<input type="text" id="trainingDescription" name="RoleName"><br>
+    Salect Competency:<select id="competencies" class="form-control"></select>
+    <button type="button" value="save" id="btnSaveTraining" class="btn btn-success btn-lg" style="margin-top: 20px;">Save Training Details</button>
+</div>
+@*<div id="rolehistory" class="container" style="padding-top:2vh;display:none;">
+        <div>
+            <div class="row">
+
+                <div class="col-sm-10">
+                    <h5 class="display-4" style="text-align:center">Role Details</h5>
+                </div>
+                <div class="col">
+                    <input type="button" value="Home" id="Home" class="btn btn-primary btn-sm Home" />
+                </div>
+            </div>
+        </div>
+
+
+
+        <table class="table" id="historyTable">
+            <thead>
+                <tr>
+                    <th scope="col">Addrole</th>
+                    <th scope="col">Edit</th>
+
+                    <th scope="col">delete</th>
+                </tr>
+            </thead>
+            <tbody id="historyTableBody"></tbody>
+        </table>
+    </div>*@
+@*<div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Add Role Details</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+
+            <div class="modal-body" id="addRole" class="container" style="padding-top:2vh;">
+                Role name: <input type="text" id="roleNameId" name="RoleName"><br>
+                Role Description:<input type="text" id="roleDescription" name="RoleName"><br>
+                Select Competencies:<table class="table" id="compDeatailsTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Check/Uncheck</th>
+                            <th scope="col">Level</th>
+                        </tr>
+                    </thead>
+                    <tbody id="compDeatailsTableBody"></tbody>
+                </table>
+                @*<button type="button" value="save" id="btnSaveRole" class="btn btn-success btn-lg" style="margin-top: 20px;">Save Role Details</button>*@
+@*</div>*@
+
+<!-- Modal footer -->
+@*<div class="modal-footer">
+        <button type="button" value="save" id="btnSaveRole" class="btn btn-success btn-lg" style="margin-top: 20px;">Save Role Details</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    </div>*@
+
+@*</div>
+    </div>*@
+@*</div>*@
+@*<div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <input type="text" id="CompName" name="competency" style="margin-left:5px;">
+                    <span>Competncy</span><br />
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="QuesDesc1" name="Questions" style="margin-left:5px;" />
+                    <span>Questions</span><br />
+                    <button id="cli" onclick="ctab()">+</button>
+                </div>
+
+
+                <div class="modal-footer">
+                    <input type="button" value="AddCompetency" id="Savecompdetails" class="btn btn-primary btn-sm btn-block" />
+                </div>
+            </div>
+        </div>
+
+    </div>*@
+
+
+@*<div id="root">
+        <div class="container" id="AddCompetency" style="padding-top:2vh">
+            <div class="row">
+                <div class="col shadow p-3 mb-5 bg-white rounded">
+                    <!--<div class="card" style="width: 30rem;">-->
+                    <div class="card-body" style="width: 25rem;">
+                        <h6 class="card-subtitle">AddCompetency details</h6>
+                        <br />
+                        <form>
+                            <div class="form-group">
+                                <input type="text" id="CompName" maxlength="20" name="competency" style="margin-left:5px;">
+                                <span>Competncy</span>
+                                <input type="text" id="QuesDesc1" name="Questions" maxlength="20" style="margin-left:5px;" />
+                                <span>Questions</span>
+                                <input type="text" id="QuesDesc2" maxlength="20" style="margin-left:5px;" />
+                                <span>Question2</span>
+                            </div>
+                            <input type="button" value="AddCompetency" id="Savecompdetails" class="btn btn-primary btn-sm btn-block" />
+                        </form>
+                    </div>
+                    <!--</div>-->
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+@*<div id="Editcom">
+        <input type="text" id="EditCompName" value="CompName">
+    </div>*@
+
+<div id="surveyresult" class="container" style="padding-top:2vh;display:none;">
+    <div class="row">
+        <div class="col"></div>
+        <div class="col shadow p-3 mb-5 bg-white rounded">
+            <!--<div class="card" style="width: 30rem;">-->
+            <div class="card-body" style="width: 25rem;">
+                <h6 class="card-subtitle" name="displayLevel"></h6>
+                <br />
+                <input type="button" value="Home" id="BackToHome" class="btn btn-primary btn-sm Home " />
+            </div>
+            <!--</div>-->
+        </div>
+        <div class="col"></div>
+    </div>
+
+</div>
+
+<!--<input type="button" value="Home" id="Home" /><h2>${title}</h2>
+price: ${formatPrice(price)}-->
+@*<table id="records_table"></table>*@
+
+<script>
+    $(document).ready(function () {
+
+        var getUrl = window.location;
+        var b = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+        console.log(b);
+        var baseUrl = getUrl.protocol + "//" + getUrl.host + '/api/TrainingService';
+        console.log(baseUrl);
+        var rootUrl = 'http://localhost:54089/api/TrainingService';
+        var questionTextBoxIndex = 1;
+        var Queslist = [];
+        var QuestionDropdownList = [];
+        var flag = 0;
+        var flag = true;
+        var questionList = [];
+        var competencyObj = {
+            "Id": -1,
+            "Name": '',
+            "Description": '',
+            "QuestionList": []
+        }
+        var competencyEditObject;
+
+        //$("#roleid").click(function () {
+        //    $("#takeTraining").hide();
+        //    $("#rolehistory").show();
+        //})
+
+
+        //Debmalya
+        var globalCompList;
+        var globalroleList;
+        var globalLevelList;
+        var selectedRoleId;
+        var roleObj = {
+            "Id": -1,
+            "Name": '',
+            "Description": '',
+            "CompetencyList": []
+        }
+        $("#roleid").click(function () {
+            $("#takeTraining").hide();
+            // $("#rolehistory").show();
+            var url = baseUrl + '/GetRoleDetailsAdmin';
+            // $('#myModal').modal()
+            //$(".modal").on("hidden.bs.modal", function () {
+            //    $(".modal-body").html("");
+            //});
+            //$('.modal-body').empty();
+            $.ajax({
+                url: url,
+                type: 'GET',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify(),
+                success: function (response) {
+                    // $("#takeTraining").hide();
+                    // $("#surveyhistory").show();
+                    // $("#historyTableBody").empty();
+                    console.log(response);
+                    var roleList = response.data;
+                    globalroleList = roleList;
+                    for (var i = 0; i < roleList.length; i++) {
+                        var roleDetailRow = $("<tr/>");
+                        roleDetailRow.attr({
+                            class: "table-secondary",
+                            name: 'roleRow_' + (roleList[i].Id)
+                        });
+                        var roleName = $("<td/>");
+                        roleName.attr({
+                            name: 'roleName_' + (roleList[i].Id)
+                        });
+                        var roleDescription = $("<td/>");
+                        roleDescription.attr({
+                            name: 'roleDescription_' + (roleList[i].Id)
+                        });
+                        var compName = $("<td/>");
+                        var expectedLevel = $("<td/>");
+                        var editRole = $("<td/>");
+                        var Delete = $("<td/>");
+                        roleName.text(roleList[i].Name);
+                        roleDescription.text(roleList[i].Description);
+                        var deleteButton = $("<a></a>");
+                        deleteButton.attr("href", "#")
+                            .append('<span class="play"></span><span class="text-danger">Delete</span>');
+                        deleteButton.click({ roleId: roleList[i].Id }, deleteRoleDeatils);
+                        var editButton = $("<a></a>");
+                        editButton.attr("href", "#")
+                            .append('<span class="play"></span><span class="text-primary">Edit</span>');
+                        editButton.click({ roleId: roleList[i].Id, roleName: roleList[i].Name, roleDescription: roleList[i].Description }, editRoleDetails);
+                        Delete.append(deleteButton);
+                        editRole.append(editButton);
+                        roleDetailRow.append(roleName);
+                        roleDetailRow.append(roleDescription);
+                        roleDetailRow.append(Delete)
+                        roleDetailRow.append(editRole)
+                        $("#roleDetailTableBody").append(roleDetailRow);
+                    }
+                    $('#roleDetailTable').DataTable({
+                        "pagingType": "simple" // "simple" option for 'Previous' and 'Next' buttons only
+                    });
+                    $('.dataTables_length').addClass('bs-select');
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                }
+            })
+            $("#rolehistory").show();
+            // $("#addRole").show();
+        })
+        function deleteRoleDeatils(event) {
+            var roleId = event.data.roleId;
+            console.log(roleId);
+            var role = { "Id": roleId };
+            var confirmation = confirm("are you sure you want to delete this role?");
+            if (confirmation) {
+                var url = baseUrl + '/DeleteRoleDetail';
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(role),
+                    success: function (response) {
+                        console.log(response.data);
+                        var flag = response.data;
+                        if (flag == true) {
+                            $("[name=roleRow_" + roleId).remove();
+                            for (var i = 0; i < globalroleList.length; i++) {
+                                var roleIdChk = globalroleList[i].Id;
+                                if (roleId == roleIdChk) {
+                                    globalroleList.splice(i, 1);
+                                    //var rolerowName = ($("[name=roleRow_" + roleId).text);
+                                    //rolerowName.remove();
+                                    //console.log(rolerowName);
+                                }
+
+                            }
+                        } else {
+
+                        }
+                    },
+                    error: function (request, error) {
+                        alert("Request: " + JSON.stringify(request));
+                    }
+                })
+            }
+        }
+        function editRoleDetails(event) {
+            var roleId = event.data.roleId;
+            selectedRoleId = roleId;
+            var roleName = event.data.roleName;
+            var roleDescript = event.data.roleDescription;
+            roleObj.Id = roleId;
+            roleObj.Description = roleDescript;
+            roleObj.Name = roleName;
+            var compList = [];
+            console.log(roleId);
+            var url = baseUrl + '/GetRoleCompetencyDetailsToEdit';
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(roleObj),
+                success: function (response) {
+                    console.log(response);
+                    var roleList = response.data1;
+                    var levList = response.data2;
+                    compList = roleList[0].CompetencyList;
+                    globalCompList = compList;
+                    $('#roleNameId').val(roleList[0].Name);
+                    $('#roleDescription').val(roleList[0].Description);
+                    for (var i = 0; i < compList.length; i++) {
+                        var compDetailRow = $("<tr/>");
+
+                        //name='compname'+compid
+                        var compName = $("<td/>");
+                        compName.attr({
+                            name: 'compName_' + (compList[i].Id)
+                        });
+                        //name='selected'+compid
+                        var checkbox = $("<td/>");
+                        //name='Expectedlevel'+compid
+                        var Expectedlevel = $("<td/>");
+                        var li = $('<input type="checkbox"/>');
+                        li.attr({
+                            name: 'checkbox_' + (compList[i].Id)
+                        });
+
+                        // var dropdownLevel = $('<input type="checkbox"/>');
+                        var dropdownLevel = $('<select />');
+                        dropdownLevel.attr({
+                            name: 'Expectedlevel_' + (compList[i].Id)
+                        });
+
+                        $.each(levList, function () {
+                            dropdownLevel.append($("<option/>").val(this.Id).text(this.Name));
+                        });
+                        if (compList[i].LevelId != -1) {
+                            li.prop('checked', true);
+                            //($("[name=Expectedlevel_" + (compList[i].Id)).val(compList[i].LevelId));
+                            dropdownLevel[0].value = compList[i].LevelId;
+                        }
+                        checkbox.append(li);
+                        Expectedlevel.append(dropdownLevel);
+                        compName.text(compList[i].Name);
+                        compDetailRow.append(compName);
+                        compDetailRow.append(checkbox);
+                        compDetailRow.append(Expectedlevel);
+                        $("#compDeatailsTableBody").append(compDetailRow);
+                        $('#myModal').modal('show');
+                    }
+
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                }
+            })
+        }
+        $('#btnCreateRole').on('click', function () {
+            roleObj = {
+                "Id": -1,
+                "Name": '',
+                "Description": '',
+                "CompetencyList": []
+            }
+            var url = baseUrl + '/GetCompetencyAndLevel';
+            selectedRoleId = -1;
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    console.log(response.data);
+
+                    var compList = response.data1;
+                    var levList = response.data2;
+                    globalCompList = compList;
+                    globalLevelList = levList;
+                    for (var i = 0; i < compList.length; i++) {
+                        var compDetailRow = $("<tr/>");
+                        //name='compname'+compid
+                        var compName = $("<td/>");
+                        compName.attr({
+                            name: 'compName_' + (compList[i].Id)
+                        });
+                        //name='selected'+compid
+                        var checkbox = $("<td/>");
+                        //name='Expectedlevel'+compid
+                        var Expectedlevel = $("<td/>");
+                        var li = $('<input type="checkbox"/>');
+                        li.attr({
+                            name: 'checkbox_' + (compList[i].Id)
+                        });
+                        // var dropdownLevel = $('<input type="checkbox"/>');
+                        var dropdownLevel = $('<select />');
+                        dropdownLevel.attr({
+                            name: 'Expectedlevel_' + (compList[i].Id),
+                            class: "btn btn-secondary btn-sm dropdown-toggle"
+                        });
+                        $.each(levList, function () {
+                            dropdownLevel.append($("<option/>").val(this.Id).text(this.Name));
+                        });
+                        checkbox.append(li);
+                        Expectedlevel.append(dropdownLevel);
+                        compName.text(compList[i].Name);
+                        compDetailRow.append(compName);
+                        compDetailRow.append(checkbox);
+                        compDetailRow.append(Expectedlevel);
+                        $("#compDeatailsTableBody").append(compDetailRow);
+                        $('#myModal').modal('show');
+                    }
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                }
+            })
+
+        });
+        $('#btnSaveRole').on('click', function () {
+            var selectedCompetencyList = [];
+            var roleId = selectedRoleId;
+            var flag = true;
+            var roleName = $('#roleNameId').val();
+            var roleDescription = $('#roleDescription').val();
+            for (var i = 0; i < globalCompList.length; i++) {
+                var compId = globalCompList[i].Id;
+
+                if (($("[name=checkbox_" + compId)[0].checked)) {
+                    var competencyObject = { 'Id': compId, 'Name': globalCompList[i].Name, 'LevelId': ($("[name=Expectedlevel_" + compId).val()) };
+                    selectedCompetencyList.push(competencyObject);
+                }
+            }
+            roleObj.Id = roleId;
+            roleObj.Name = roleName;
+            roleObj.Description = roleDescription;
+            roleObj.CompetencyList = selectedCompetencyList;
+            var url = baseUrl + '/SaveRoleDetail';
+
+            if (roleName.length < 1 || roleDescription.length < 1 || selectedCompetencyList.length < 1) {
+                $('#roleNameId').after('<span class="text-danger"><small>*Role Name is required</small></span>');
+                $('#roleDescription').after('<span class="text-danger"><small>*Description is required</small></span>');
+                $('#compDeatailsTable').after('<span class="text-danger"><small>*Atleast one competency is required</small></span>');
+                flag = false;
+            }
+            if (flag == true) {
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(roleObj),
+                    success: function (response) {
+                        console.log(response.data);
+                        var newRoleObj = response.data;
+                        var action = response.action;
+                        var message = response.message;
+                        // 'roleRow_' + (roleList[i].Id)
+                        // $("[name = roleRow_ " + response.data[i].Name + "]").append(response.data[i].Name);
+                        // $("[name = roleRow_" + response.data[i].Description + "]").append(response.data[i].Description);
+                        // for (var i = 0; i < roleList.length; i++) {
+                        if (selectedRoleId == -1 && action) {
+                            var roleDetailRow = $("<tr/>");
+                            roleDetailRow.attr({
+                                name: 'roleRow_' + (newRoleObj.Id)
+                            });
+                            var roleName = $("<td/>");
+                            roleName.attr({
+                                name: 'roleName_' + (newRoleObj.Id)
+                            });
+                            var roleDescription = $("<td/>");
+                            roleDescription.attr({
+                                name: 'roleDescription_' + (newRoleObj.Id)
+                            });
+                            var compName = $("<td/>");
+                            var expectedLevel = $("<td/>");
+                            var editRole = $("<td/>");
+                            var Delete = $("<td/>");
+                            roleName.text(newRoleObj.Name);
+                            roleDescription.text(newRoleObj.Description);
+                            var deleteButton = $("<a></a>");
+                            deleteButton.attr("href", "#")
+                                .append('<span class="play"></span><span class="trackName">Delete</span>');
+                            deleteButton.click({ roleId: newRoleObj.Id }, deleteRoleDeatils);
+                            var editButton = $("<a></a>");
+                            editButton.attr("href", "#")
+                                .append('<span class="play"></span><span class="trackName">Edit</span>');
+                            editButton.click({ roleId: newRoleObj.Id, roleName: newRoleObj.Name, roleDescription: newRoleObj.Description }, editRoleDetails);
+                            Delete.append(deleteButton);
+                            editRole.append(editButton);
+                            roleDetailRow.append(roleName);
+                            roleDetailRow.append(roleDescription);
+                            roleDetailRow.append(Delete)
+                            roleDetailRow.append(editRole)
+                            $("#roleDetailTableBody").append(roleDetailRow);
+                            $('#myModal').modal('toggle');
+                        }
+                        else if (selectedRoleId != -1 && action) {
+                            $('[name="roleName_' + newRoleObj.Id + '"]')[0].textContent = newRoleObj.Name;
+                            $('[name="roleDescription_' + newRoleObj.Id + '"]')[0].textContent = newRoleObj.Description;
+                            $('#myModal').modal('toggle');
+                        }
+                        else if (action == false) {
+                            //$('[name="roleName_' + newRoleObj.Id + '"]')[0].textContent = newRoleObj.Name;
+                            //$('[name="roleDescription_' + newRoleObj.Id + '"]')[0].textContent = newRoleObj.Description;
+                            $('#dupRolemsg').after('<span class="text-danger" style="text-align: center"><small>' + "*" + message + '</small></span>');
+                        }
+
+                    },
+                    error: function (request, error) {
+                        alert("Request: " + JSON.stringify(request));
+                    }
+                })
+            }
+
+        });
+        $("#compid").click(function () {
+            $("#takeTraining").hide();
+            $("#comphistory").show();
+        })
+        $("#Home").click(function () {
+            $("#takeTraining").show();
+            $("#rolehistory").hide();
+            $("#comphistory").hide();
+        });
+        $("#BackHome").click(function () {
+            $("#takeTraining").show();
+            $("#comphistory").hide();
+        });
+        $("#trainingId").click(function () {
+            $("#takeTraining").hide();
+            $("#trainingDetailId").show();
+            var url = baseUrl + '/GetCompetencyDeatilsTraining';
+            $.ajax({
+                url: url,
+                type: 'GET',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify(),
+                success: function (response) {
+                    // $("#takeTraining").hide();
+                    // $("#surveyhistory").show();
+                    // $("#historyTableBody").empty();
+                    console.log(response);
+                    var compList = response.data;
+                    //globalroleList = roleList;
+                    $("#competencies").empty();
+                    $.each(response.data, function () {
+                        $("#competencies").append($("<option/>").val(this.Id).text(this.Name));
+                    });
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                }
+            })
+
+        })
+        $('#btnSaveTraining').on('click', function () {
+            var trainingName = $('#trainingNameId').val();
+            var trainingDescription = $('#trainingDescription').val();
+            var selectedCompetencyId = $("#competencies").val();
+            //console.log(selectedCompetency);
+            var roleId = -1;
+            var competencyObj = { "Id": selectedCompetencyId }
+            var training = { "Id": roleId, "Name": trainingName, "Description": trainingDescription, "Competency": competencyObj };
+            var url = baseUrl + '/saveTrainingDetails';
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(training),
+                success: function (response) {
+                    console.log(response);
+
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                }
+            })
+
+        });
+
+
+        /////Saranya
+        function renderCompetencyTableRow(competency) {
+            var compdet = $("<tr/>");
+            compdet.attr({
+                "name": "CompDetail_" + competency.Id
+            });
+            var CompId = $("<td/>");
+            CompId.attr({
+                "name": "CompId_" + competency.Id
+            })
+            CompId.text(competency.Id);
+            compdet.append(CompId);
+
+            var CompName = $("<td/>");
+            CompName.attr({
+                "name": "CompName_" + competency.Id
+            })
+            CompName.text(competency.Name);
+            compdet.append(CompName);
+
+            var EditActions = $("<td/>");
+            EditActions.attr({
+                "name": "CompEditLink_" + competency.Id
+            })
+            var compEditLink = $("<a></a>");
+            compEditLink.attr("href", "#")
+                .append('<span class="play"></span><span class="trackName">Edit</span>');
+            compEditLink.attr({
+                "href": '#',
+                "compId": competency.Id,
+                "compName": competency.Name,
+               
+            });
+            compEditLink.click({ compId: competency.Id, compName: competency.Name }, editCompDetails);
+            EditActions.append(compEditLink);
+            compdet.append(EditActions);
+            var DeleteActions = $("<td/>");
+            DeleteActions.attr({
+                "name": "CompDeleteLink_" + competency.Id
+            })
+            var compDeleteLink = $("<a></a>");
+            compDeleteLink.attr("href", "#")
+                .append('<span class="play"></span><span class="trackName">Delete</span>');
+            compDeleteLink.attr({
+                "href": '#',
+                "compId": competency.Id,
+                "compName": competency.Name,
+            });
+            compDeleteLink.click({ compId: competency.Id, compName: competency.Name }, deleteCompdetails);
+            DeleteActions.append(compDeleteLink);
+            compdet.append(DeleteActions);
+            $("#compbody").append(compdet);
+        }
+        //on page load showing competency table
+        $("#compid").click(function () {
+            //var rootUrl = 'http://localhost:54089/api/TrainingService';
+            var url = rootUrl + '/GetListofComp';
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    $("#takeTraining").hide();
+                    $("#comphistory").show(); ``
+                    console.log(response);
+                    var compList = response.data;
+                    for (var i = 0; i < compList.length; i++) {
+                        renderCompetencyTableRow(compList[i]);
+                    }
+                    $('#competencyNames').DataTable({
+                        "pagingType": "simple" // "simple" option for 'Previous' and 'Next' buttons only
+                    });
+
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                },
+            })
+        });
+        function DeleteQuestions(event) {
+            var id = event.data.id;
+            $("#questionDiv_" + id)[0].remove();
+        }
+        function deleteCompdetails(event) {
+            var compId = event.data.compId;
+            var compDetails = {
+                "Id": compId
+            };
+           // var rootUrl = 'http://localhost:54072/api/TrainingService';
+            var url = rootUrl + '/CompDelete';
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(compDetails),
+                success: function (response) {
+                    console.log(response);
+                    if (flag == 0) {
+                        $("[name = CompDetail_" + compId + "]").remove();
+                    }
+                    else
+                        alert("Your operation is not success");
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                },
+            });
+        }
+        $("#Home").click(function () {
+            $("#takeTraining").show();
+            $("#rolehistory").hide();
+            $("#comphistory").hide();
+        });
+        $("#BackHome").click(function () {
+            $("#takeTraining").show();
+            $("#comphistory").hide();
+        });
+        $("#saveCompDetails").click(function () {
+            competencyObj.Name = document.getElementById('compName').value;
+          var   CompName = $("#compName").val();
+           var  Compdescription = $("#compDescription").val();
+            var competencyQuestionList = [];
+            $.each(QuestionDropdownList, function () {
+                var question = { 'QuestionStatement': '', 'Id': -1 };
+                var dropdownId = "#" + this + " option:selected";
+                question.Id = $(dropdownId).val();
+                question.QuestionStatement = $(dropdownId).text()
+                competencyQuestionList.push(question);
+            });
+            competencyObj.QuestionList = competencyQuestionList;
+           // $('#createCompetencyModal').modal('toggle');
+            //document.getElementById("comptencyQuestionContainer").innerHTML = "";
+            //$("#compName").val('');
+            //$("#compDescription").val('');
+            var url = rootUrl + '/SaveCompetencyDetail';
+            if (CompName.length < 1 || Compdescription.length < 1 || competencyQuestionList.length < 1) {
+                $('#compName').after('<span class="text-danger"><small>*Competency Name is required</small></span>');
+                $('#compDescription').after('<span class="text-danger"><small>*Description is required</small></span>');
+                $('#comptencyQuestionContainer').after('<span class="text-danger"><small>*Atleast one Question is required for a competency</small></span>');
+                flag = false;
+            }
+            if (flag == true) {
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    datatype: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(competencyObj),
+
+                    success: function (response) {
+                        console.log(response);
+                        var action = response.action;
+                        if (action) {
+                            alert("details added Successfully");
+                            if (competencyObj.Id == -1) {
+                                renderCompetencyTableRow(response.data);
+                            }
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function (request, error) {
+                        alert("Request: " + JSON.stringify(request));
+                    },
+
+                });
+            }
+        });
+        $("#addCompetencyQuestions").click(function () {
+            var selTemplate = '';
+            selTemplate += '<div  id="questionDiv_' + questionTextBoxIndex + '"><select id=questionDropdown_' + questionTextBoxIndex + ' class="form-control" style="min-width:80%;display: inline-block">'
+            QuestionDropdownList.push('questionDropdown_' + questionTextBoxIndex);
+            var questionTemplate = '';
+            for (var j = 0; j < questionList.length; j++) {
+                questionTemplate += '<option value=' + questionList[j].Id + '>' + questionList[j].QuestionStatement + '</option>';
+            }
+            selTemplate += questionTemplate;
+            selTemplate += '</select>';
+            selTemplate += '<input type="button" value="Delete"  class="deleteQuestion" style="display: inline-block"/><div>';
+            $(".deleteQuestion").click({ "id": questionTextBoxIndex }, DeleteQuestions);
+            console.log(selTemplate);
+            $("#comptencyQuestionContainer").append(selTemplate);
+            questionTextBoxIndex++;
+        });
+        //Edit Competency
+        function editCompDetails(event) {
+            competencyObj.Id = event.data.compId;
+            competencyObj.Name = event.data.compName;
+            $("#compModalTitle").text("Edit Comeptency");
+            var url = rootUrl + '/FetchCompetecyDetail';
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(competencyObj),
+                success: function (response) {
+                    var competencyObj = response.competencyEditObject;
+                    questionList = response.questionList;
+                    $("#compName").val(event.data.compName);
+                    var selTemplate = '';
+                    console.log(competencyObj.QuestionList.length);
+                    QuestionDropdownList.length = 0;
+                    for (var i = 0; i < competencyObj.QuestionList.length; i++) {
+                        var question = competencyObj.QuestionList[i];
+                        selTemplate += '<div  id="questionDiv_' + questionTextBoxIndex + '"><select id=questionDropdown_' + questionTextBoxIndex + ' class="form-control" style="min-width:80%;display: inline-block">';
+                        QuestionDropdownList.push('questionDropdown_' + questionTextBoxIndex);
+                        var questionTemplate = '';
+                        for (var j = 0; j < questionList.length; j++) {
+                            if (questionList[j].Id === question.Id) {
+                                questionTemplate += '<option value="' + questionList[j].Id + '"selected>' + questionList[j].QuestionStatement + '</option>';;
+                            }
+                            else {
+                                questionTemplate += '<option value="' + questionList[j].Id + '">' + questionList[j].QuestionStatement + '</option>';
+                            }
+                        }
+                        selTemplate += questionTemplate;
+                        selTemplate += '</select>';
+                        if (i != 0) {
+                            selTemplate += '<input type="button" value="Delete"  style="display: inline-block"/></div>';
+                        }
+                        else {
+                            selTemplate += '</div>';
+                        }
+                        questionTextBoxIndex++;
+                    }
+                    console.log(selTemplate);
+                    $("#comptencyQuestionContainer").append(selTemplate);
+                },
+                error: function (err) { }
+            });
+            $('#createCompetencyModal').modal('show');
+        }
+        $("#createCompetencyBtn").click(function () {
+            competencyObj = {
+                "Id": -1,
+                "Name": '',
+                "Description": '',
+                "QuestionList": []
+            };
+            var data = { 'compId': -1 };
+            var event = { 'data': data };
+            //AddNewQuestions(event);
+            //var rootUrl = 'http://localhost:54072/api/TrainingService';
+            var url = rootUrl + '/GetListofNewQues';
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    //questionTextBoxIndex = 1;
+                    QuestionDropdownList.length = 0;
+                    //JSON.stringify(alert(response.data));
+                    questionList = response.data;
+                    //createQuestionDropDown();
+                    var selTemplate = '';
+                    selTemplate += '<div id=questionDiv_' + questionTextBoxIndex + '><select id=questionDropdown_' + questionTextBoxIndex + ' class="form-control" style="min-width:80%;display: inline-block">'
+                    QuestionDropdownList.push('questionDropdown_' + questionTextBoxIndex);
+                    var questionTemplate = '';
+                    for (var j = 0; j < questionList.length; j++) {
+                        questionTemplate += '<option value=' + questionList[j].Id + '>' + questionList[j].QuestionStatement + '</option>';
+                    }
+                    selTemplate += questionTemplate;
+                    selTemplate += '</select>';
+                    // selTemplate += '<input type="button" value="Delete"  style="display: inline-block"/><div>';
+                    console.log(selTemplate);
+                    $("#comptencyQuestionContainer").append(selTemplate);
+                    questionTextBoxIndex++;
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                },
+            });
+            $("#compModalTitle").text("Create Comeptency");
+            $('#createCompetencyModal').modal('show');
+
+        });
+    });
+</script>
+
+

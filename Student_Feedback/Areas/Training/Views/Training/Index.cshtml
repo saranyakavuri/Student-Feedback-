@@ -1,0 +1,554 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Index</h2>
+
+<div id="root">
+    <div class="container" id="takeTraining" style="padding-top:2vh">
+        <div class="row">
+            <div class="col shadow p-3 mb-5 bg-white rounded">
+                <!--<div class="card" style="width: 30rem;">-->
+                <div class="card-body" style="width: 25rem;">
+                    <h6 class="card-subtitle">Please Choose Either Roles or Competencies</h6>
+                    <br />
+                    <form>
+                        <div class="form-group">
+                            <input type="radio" id="rbrole" name="role">
+                            <span>Role</span>
+                            <input type="radio" id="rbcomp" name="role" style="margin-left:5px;" />
+                            <span>Competency</span>
+                            <select id="roles" class="form-control"></select>
+                        </div>
+                        <input type="button" value="Take A Tour" id="btnTakeAtour" class="btn btn-primary btn-sm btn-block" />
+                    </form>
+                </div>
+                <!--</div>-->
+            </div>
+
+
+            <div id="loaderDiv">
+          @*<h4 style="text-align:justify">..Loading..</h4>*@
+        </div>
+            <div class="col"></div>
+            <div class="col shadow p-3 mb-5 bg-white rounded">
+                <div class="card-body" style="width: 25rem;">
+                    <h6 class="card-subtitle">Search Trainings</h6>
+                    <br />
+                    <form>
+                        <div class="form-group">
+                            <input type="text" class="form-control">
+                        </div>
+                    </form>
+                    <input type="button" value="Search" class="btn btn-primary btn-sm btn-block" />
+                </div>
+            </div>
+
+        </div>
+        <div class="row"><div><button type="button" value="View Survey History" id="history" class="btn btn-info btn-lg btn-block">View Survey History</button></div></div>
+      </div>
+
+
+    <div id="dvAccordionContainer" data-role="content" class="container" style="padding-top:2vh;display:none;">
+        <div id="accordion" data-role="collapsible-set"></div>
+        <button type="button" value="Continue" id="btnContinue" class="btn btn-success btn-lg" style="margin-top: 20px;">Continue</button>
+    </div>
+
+    <div id="surveyhistory" class="container" style="padding-top:2vh;display:none;">
+        <div>
+            <div class="row">
+               
+                <div class="col-sm-10">
+                    <h5 class="display-4" style="text-align:center">Training History</h5>
+                </div>
+                <div class="col">
+                    <input type="button" value="Home" id="Home" class="btn btn-primary btn-sm Home" />
+                </div>
+            </div></div>
+        
+
+
+        <table class="table" id="historyTable">
+            <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Level</th>
+                </tr>
+            </thead>
+            <tbody id="historyTableBody"></tbody>
+        </table>
+    </div>
+
+
+    <div id="surveyresult" class="container" style="padding-top:2vh;display:none;">
+        <div class="row">
+            <div class="col"></div>
+            <div class="col shadow p-3 mb-5 bg-white rounded">
+                <!--<div class="card" style="width: 30rem;">-->
+                <div class="card-body" style="width: 25rem;">
+                    <h6 class="card-subtitle" name="displayLevel"></h6>
+                    <br />
+                    <input type="button" value="Home" id="BackToHome" class="btn btn-primary btn-sm Home " />
+                </div>
+                <!--</div>-->
+            </div>
+            <div class="col"></div>
+        </div>
+
+    </div>
+
+
+    <!--<input type="button" value="Home" id="Home" /><h2>${title}</h2>
+        price: ${formatPrice(price)}-->
+</div>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $("#dvAccordionContainer").hide();
+        $("#surveyhistory").hide();
+        $("#surveyresult").hide();
+        // Global variable to keep track of all the activities
+        var javascriptTraingObject;
+        console.log(window.location);
+        var getUrl = window.location;
+        var b = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+        console.log(b);
+        var baseUrl = getUrl.protocol + "//" + getUrl.host + '/api/TrainingService';
+        console.log(baseUrl);
+        // this object will contain the score for previously submitted answer.
+        var surveyDetails = '';
+        $(".Home").click(function () {
+            $("#takeTraining").show();
+            $("#dvAccordionContainer").hide();
+            $("#surveyhistory").hide();
+            $("#surveyresult").hide();
+            $("input:radio[name='role']").prop('checked', false);
+            $("#roles").empty();
+        });
+        var cards = $();
+        $("#btnTakeAtour").click(function () {
+
+            var val = $("#roles").val();
+        
+                var queryStringParam = '';
+                if ($("input[id='rbrole']:checked").val() === 'on') {
+                    
+                    var roleId = val;
+                    queryStringParam = "/?roleid=" + val;
+               
+            }
+            if ($("input[id='rbcomp']:checked").val() === 'on') {
+
+                //alert("loading..");
+                var compId = val;
+                queryStringParam = "/?compid=" + val;
+            }
+            
+            var url = baseUrl + '/StartSurvey' + queryStringParam;
+            var surveyObject = {
+                'Id': -1,
+                'RoleId': roleId,
+                'CompetencyId': compId,
+                'CompetencyList': [],
+                'TakeAsAGuest': false,
+                'TakenBy': 'Anonymous'
+            }
+              
+            $.ajax({
+                url: url,
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify(surveyObject),
+                beforeSend: function () {
+                    $("#loaderDiv").show();
+                },
+                success: function (response) {
+                    console.log(response);
+                    $("#loaderDiv").hide();
+
+                    javascriptTraingObject = response.data;
+                    var surveyData = response.data;
+                    var listValue = $('#roles')[0].length;
+                    if (listValue == 0) {
+
+                        alert('There is no option selected.Please select an option');
+                        //$("#dvAccordionContainer").hide();
+                        $("#takeTraining").show();
+                        $("#dvAccordionContainer").hide();
+                    }
+
+                    else {
+                        alert('Option is selected');
+                        $("#takeTraining").hide();
+                        $("#dvAccordionContainer").show();
+                        renderCompetencyQuestions_Take1(surveyData);
+                        //renderCompetencyQuestions(surveyData);
+                    }
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                }
+            })
+            //alert("button");
+        });
+        $("#history").click(function () {
+            var url = baseUrl + '/FetchSurveyHistory';
+            var userId = "Anonymous"
+            var survey = { "TakenBy": userId };
+            $.ajax({
+                url: url,
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify(survey),
+                success: function (response) {
+                    $("#takeTraining").hide();
+                    $("#surveyhistory").show();
+                    $("#historyTableBody").empty();
+                    console.log(response);
+                    var surveyList = response.data;
+                    for (var i = 0; i < surveyList.length; i++) {
+                        var historyRow = $("<tr/>");
+                        var trainingDate = $("<td/>");
+                        var trainingStatus = $("<td/>");
+                        var trainingLevel = $("<td/>");
+                        if (surveyList[i].LevelId != -1) {
+                            trainingStatus.text("Completed");
+                            trainingLevel.text(surveyList[i].LevelName);
+                        }
+                        else {
+                            trainingStatus.text("Incomplete");
+                            trainingStatus.attr({
+                                "style": "color:red"
+                            });
+                            //trainingLevel.text("Complete The Survey");
+                            var surveyDetailLink = $("<a></a>");
+                            //surveyDetailLink.text = 'Survey';
+                            surveyDetailLink.attr("href", "#")
+                                .append('<span class="play"></span><span class="trackName">Click Here To Complete Survey</span>');
+                            surveyDetailLink.attr({
+                                "href": '#',
+                                "trainingId": surveyList[i].Id,
+                                "name": "training_history_" + surveyList[i].Id
+
+                            });
+                            surveyDetailLink.click({ trainingId: surveyList[i].Id, result: surveyList[i].LevelId, roleId: surveyList[i].RoleId, competencyId: surveyList[i].CompetencyId }, fetchSurveyDetail);
+                            trainingLevel.append(surveyDetailLink);
+                        }
+                        trainingDate.text(surveyList[i].TakeOn);
+                        historyRow.append(trainingDate);
+                        historyRow.append(trainingStatus);
+
+                        historyRow.append(trainingLevel);
+                        $("#historyTableBody").append(historyRow);
+                        //$("#surveyhistory").append(historyStatement);
+                    }
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                }
+            })
+        });
+        $("input:radio[name='role']").change(function () {
+            var id = $(this)[0].id;
+            var queryStringParam = '';
+            if (id === 'rbrole') {
+                queryStringParam = '?option=role';
+            }
+            else if (id === 'rbcomp') {
+                queryStringParam = '?option=competency';
+            }
+            var url = baseUrl + '/GetRolesDetails' + queryStringParam;
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $("#roles").empty();
+                    $.each(data.data, function () {
+                        $("#roles").append($("<option/>").val(this.Id).text(this.Name));
+                    });
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                }
+            })
+
+        });
+        function fetchSurveyDetail(event) {
+            var trainingId = event.data.trainingId;
+            var result = event.data.result;
+            var roleId = event.data.roleId;
+            var competencyId = event.data.competencyId;
+            var survey = { "Id": trainingId, "RoleId": roleId, "CompetencyId": competencyId, "LevelId": result };
+            if ((result != undefined) && (result != -1)) {
+                alert(result);
+            }
+            else {
+                var url = baseUrl + '/FetchSurveyDetail';
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(survey),
+                    success: function (response) {
+                        console.log(response.data);
+                        var surveyObj = response.data;
+                        javascriptTraingObject = surveyObj;
+                        $("#dvAccordionContainer").show();
+                        $("#surveyhistory").hide();
+                        $("#surveyresult").hide();
+                        $("#takeTraining").hide();
+                        renderCompetencyQuestions_Take1(surveyObj);
+                    },
+                    error: function (request, error) {
+                        alert("Request: " + JSON.stringify(request));
+                    }
+                })
+            }
+            console.log(trainingId);
+        }
+        $('#accordion').on('click', '.btnSave', function () {
+            var competencyName = $(this).attr("compName");
+            var CompetencyId = $(this).attr("compId");
+            nextButtonClick(competencyName, CompetencyId, this);
+            console.log('hi', $(this).attr("compName"), 'csa');
+        })
+        function nextButtonClick(competencyName, CompetencyId, curElement) {
+            var competencyObject = getCompetencyDetailFromDom(competencyName, CompetencyId);
+            var competencyList = [];
+            competencyList.push(competencyObject);
+            var surveyObject = {
+                'Id': javascriptTraingObject.Id,
+                'RoleId': javascriptTraingObject.RoleId,
+                'CompetencyId': CompetencyId,
+                'CompetencyList': competencyList,
+                'TakenBy': 'Anonymous'
+            }
+            var url = baseUrl + '/UpdateSurvey?action=next';
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                type: "POST",
+                data: JSON.stringify(surveyObject),
+                success: function (response) {
+                    console.log(response);
+                    var current_index = $(curElement).parent().next('h3').index();
+                    if (current_index != -1) { // just checks if its the last
+                        $(curElement).parent().next('h3').trigger('click');
+                    } else {
+                        //$('h3#section1').trigger('click');
+                    }
+
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                }
+            })
+        }
+        $('#btnContinue').on('click', function () {
+            var competencyList = [];
+            for (var i = 0; i < javascriptTraingObject.CompetencyList.length; i++) {
+                var competencyName = javascriptTraingObject.CompetencyList[i].Name;
+                var competencyId = javascriptTraingObject.CompetencyList[i].Id;
+                var competencyObject = getCompetencyDetailFromDom(competencyName, competencyId);
+                competencyList.push(competencyObject);
+            }
+            var surveyObject = {
+                'Id': javascriptTraingObject.Id,
+                'RoleId': javascriptTraingObject.RoleId,
+                'CompetencyId': javascriptTraingObject.CompetencyId,
+                'CompetencyList': competencyList,
+                'TakenBy ': 'Anonymous'
+            }
+            var url = baseUrl + '/UpdateSurvey?action=continue';
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                type: "POST",
+                data: JSON.stringify(surveyObject),
+                success: function (response) {
+                    console.log(response);
+                    var result = response.data;
+                    $("#takeTraining").hide();
+                    $("#dvAccordionContainer").hide();
+                    $("#surveyhistory").hide();
+                    $("[name=displayLevel]").text('You are a ' + result);
+                    $("#surveyresult").show();
+                },
+                error: function (request, error) {
+                    alert("Request: " + JSON.stringify(request));
+                }
+            })
+        })
+        function getCompetencyDetailFromDom(competency, Id) {
+            competency = competency.replace(/\s+/g, '')
+            var questionIDList = $("[name=" + competency + "_Question]");
+            var questionList = [];
+            for (var i = 0; i < questionIDList.length; i++) {
+                var questionID = $(questionIDList[i]).attr('id'); ///Number(questionIDList[i]);
+                var a = questionID.split('_');
+                var qid = a[a.length - 1];
+                var questionStatement = $("[name=" + questionID + "_Question]").text();
+                var questionAnswer = ($("[name=" + questionID + "_Answer]")[0].checked) ? true : false;
+                var questionRelevance = ($("[name=" + questionID + "_Relevance]")[0].checked) ? true : false;
+                var questionObject = {
+                    'Id': qid, 'QuestionStatement': questionStatement, 'Answer': questionAnswer,
+                    'Relevant': questionRelevance
+                };
+                questionList.push(questionObject);
+            }
+            var competencyObject = { 'Id': Id, 'Name': competency, 'QuestionList': questionList };
+            console.log(competencyObject);
+            return competencyObject;
+        }
+        function renderCompetencyQuestions_Take1(data) {
+            //$("#accordion").empty();
+            var finalHTML = "";// '<h3>Tst</h3><div class="card"><div class="card-body">Test data</div></div>';
+            //loop through competency list
+            var compHeader = "";
+            var comp = "";
+            var compId = -1;
+            $.each(data.CompetencyList, function () {
+                comp = this.Name.replace(/\s+/g, '');
+                compId = this.Id;
+                compHeader = '<h3>' + this.Name + '</h3>';
+                compHeader += '<div CompetencyID=' + this.Id + ' Name="' + comp + '">'
+                var question = "";
+                $.each(this.QuestionList, function (index, item) {
+
+                    question += '<span name=' + comp + '_Question id=' + comp + '_' + item.Id + '><b>' + item.QuestionStatement + '</b></span><br/>';
+                    var radioName = comp + '_' + item.Id + '_Answer';
+                    if (item.Answer == null) {
+                        question += '<input type="radio" value="yes" name=' + radioName + '>Yes</input>';
+                        question += '<input type="radio" value="no" name=' + radioName + '>No</input><br/>';
+                    }
+                    else {
+                        question += '<input type="radio" value="yes" ' + (item.Answer ? 'checked' : '' )+ ' name=' + radioName + '>Yes</input>';
+                        question += '<input type="radio" value="no" ' + (!item.Answer ? 'checked' : '') + ' name=' + radioName + ' > No</input > <br />';
+                    }
+
+                    question += '<span>Is this question relevant</span><br/>';
+                    radioName = comp + '_' + item.Id + '_Relevance';
+
+                    if (item.Relevant == null) {
+                        question += '<input type="radio" value="yes" name=' + radioName + '>Yes</input>';
+                        question += '<input type="radio" value="no" name=' + radioName + '>No</input><br/>';
+                    }
+                    else {
+                        question += '<input type="radio" value="yes" ' + (item.Relevant ? 'checked' : '') + ' name=' + radioName + '>Yes</input>';
+                        question += '<input type="radio" value="no" ' + (!item.Relevant ? 'checked' : '') + ' name=' + radioName + ' > No</input > <br />';
+                    }
+                });
+                compHeader += question
+                compHeader += '<button type="button" value="Save" name="btnSave" compName="' + comp + '" compId=' + compId + ' class="btn btn-success btnSave">Save</button>';
+                compHeader += '</div>';
+                finalHTML += compHeader;
+            });
+            //question list with competency
+            console.log(finalHTML);
+            $("#accordion").empty();
+            $("#accordion").append(finalHTML);
+            $("#accordion").accordion();
+            $("#accordion").accordion('destroy');
+            $("#accordion").accordion();
+        }
+        /*
+        function renderCompetencyQuestions(data) {
+            $("#accordion").empty();
+            $.each(data.CompetencyList, function () {
+                competency = this.Name;
+                competency = competency.replace(/\s+/g, '')
+                var competencyHeader = $("<h3/>");
+                competencyHeader.attr({
+                    "competencyID": this.Id,
+                    "name": competency
+                });
+                competencyHeader.text(this.Name);
+                $("#accordion").append(competencyHeader);
+                var questionSection = $("<div/>");
+                questionSection.attr({
+                    "name": competency + '_QuestionList'
+                });
+                var questionIDList = [];
+                for (var j = 0; j < this.QuestionList.length; j++) {
+                    questionIDList.push(Number(this.QuestionList[j].Id));
+                    var question = $("<p/>");
+                    var questionStatement = $("<p/>");
+                    questionStatement.attr({
+                        "questionID": this.QuestionList[j].Id,
+                        "name": competency + '_' + this.QuestionList[j].Id + '_Question'
+                    });
+                    questionStatement.text(this.QuestionList[j].QuestionStatement);
+                    question.append(questionStatement);
+                    var answerRadioButtonYes = $("<input/>");
+                    answerRadioButtonYes.attr({
+                        "type": "radio", "value": "yes", "name": competency + '_' + this.QuestionList[j].Id + '_Answer'
+                    });
+                    question.append("<span>Yes</span>");
+                    question.append(answerRadioButtonYes);
+                    question.append("<br/>");
+                    var answerRadioButtonNo = $("<input/>");
+                    answerRadioButtonNo.attr({
+                        "type": "radio", "value": "No", "name": competency + '_' + this.QuestionList[j].Id + '_Answer'
+                    });
+                    if (this.QuestionList[j].Answer != null) {
+                        (this.QuestionList[j].Answer) ? answerRadioButtonYes.prop('checked', true) : answerRadioButtonNo.prop('checked', true);
+                    }
+                    question.append("<span>No</span>");
+                    question.append(answerRadioButtonNo);
+                    question.append("<br/>");
+                    question.append("<span>Is this question relevant?</span>")
+                    var relevanceRadioButtonYes = $("<input/>");
+                    relevanceRadioButtonYes.attr({
+                        "type": "radio", "value": "yes", "name": competency + '_' + this.QuestionList[j].Id + '_Relevance'
+                    });
+                    question.append("<span>Yes</span>");
+                    question.append("<br/>");
+                    question.append(relevanceRadioButtonYes);
+                    var relevanceRadioButtonNo = $("<input/>");
+                    relevanceRadioButtonNo.attr({
+                        "type": "radio", "value": "No", "name": competency + '_' + this.QuestionList[j].Id + '_Relevance'
+                    });
+                    if (this.QuestionList[j].Relevant != null) {
+                        (this.QuestionList[j].Relevant) ? relevanceRadioButtonYes.prop('checked', true) : relevanceRadioButtonNo.prop('checked', true);
+                    }
+                    question.append("<span>No</span>");
+                    question.append(relevanceRadioButtonNo);
+                    questionSection.append(question);
+                }
+                questionSection.attr({
+                    "questionIDList": questionIDList
+                });
+                var nextButton = $("<input/>");
+                nextButton.attr({
+                    "type": "button", "name": competency + '_' + 'NextButton', "value": "Next"
+                });
+                nextButton.click({ competencyName: competency, Id: this.Id }, nextButtonClick);
+                questionSection.append(nextButton);
+                $("#accordion").append(questionSection);
+            });
+            var continueButton = $("<input/>");
+            continueButton.attr({
+                "type": "button", "name": competency + '_' + 'ContinueButton', "value": "Continue"
+            });
+            continueButton.click({}, continueButtonClick);
+            $("#accordion").append(continueButton);
+        }
+        */
+
+
+
+    });
+
+</script>
+

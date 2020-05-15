@@ -1,0 +1,421 @@
+﻿/* 
+    _Layout styles - [1]
+        > colors
+            Grey lightest:    #D8D8D8;
+            Grey light:       #99979C;
+            Teal Arconic:     #00AFBA;      Dark Blue Arconic:  #002237;
+        > boxes
+        > MediaQueries
+            > Mobile only: padding | hideOnMobile | desktop only
+        > Spacers
+    
+    Sidebar - [2] 
+        > my contribution
+        > needed code
+
+    Site-wide - [3]
+        > fonts                 > divs                      > dropdown
+        > lines                 > label                     > button
+        > links                 > right Sidebar             > checkbox
+        > card                  > text stuff     
+        > inside page 'Heading' + 'Bradcrumbs'
+        > bootstrapOverride (form-control textarea)         
+
+    _Footer - [4]
+
+    Font Awesome - [9]
+        > fontAwesomeSidebar | fontAwesomeJumbotron | fontAwesomeMedia
+*/
+
+
+/* //////// must move this */
+
+/* [3] Site-wide - text stuff */
+    .textColon { padding-left: 2px; }
+
+/* [3] Site-wide - Heading Inside Page + breadcrumbs */
+    .textRegular {
+      font-size: 33px;
+    }
+
+    .breadcrumbsLink { color: #939497; font-size: 12px; } /* was color: #555; */
+    .breadcrumbsLink:hover { color: #5B5B5B; text-decoration: none; font-size: 12px; }
+    .breadcrumbsText { color: #939497; font-size: 12px; }
+    .breadcrumbsIcons { color: #939497; font-size: 12px;}
+
+
+
+/* //////// end of 'must move' area */
+
+
+/*  [1] _Layout - colors */
+    .colorBlack10PercentAlmostWhite { color: #fdfdfd; }
+    .colorBlack10PercentFourTimesLighter { color: #f3f3f3; }
+    .colorBlack10Percent { color: #E6E6E6; }
+    .colorGreyLigtestBg { background-color: #D8D8D8; }
+    .colorGreyLightest { color: #D8D8D8; }
+    .colorGreyLightBg { background-color: #99979C; }
+    .colorGreyLight { color: #99979C; }
+    .colorTeal { color: #00AFBA; }
+    .colorTealBg { background-color: #00AFBA;}
+    .colorTeal25Percent { color: #BFEBEE; }
+    .colorTeal25PercentBg { background-color: #BFEBEE; }
+    .colorDarkBlue { color: #002237; }
+    
+    /* 
+        GreyLightest:   #D8D8D8;
+        GreyLight:      #99979C; 
+    
+        Colors used in the Footer: #5B5B5B; #B9BBBE; #939497;
+     */
+
+/* [1] _Layout - Boxes */
+    .boxTeal {
+        padding-top: 0px;
+        padding-bottom: 0px;
+        padding-left: 4px;
+        padding-right: 4px;
+        font-size: 97%;
+        background-color: #00AFBA;     
+    }
+    .boxTeal25Percent {
+        padding-top: 0px;
+        padding-bottom: 0px;
+        padding-left: 2px;
+        padding-right: 2px;
+        font-size: 97%;
+        background-color: #BFEBEE;
+        border-radius: 2px;
+    }
+    .boxGreyBorders {
+        border-style: solid;
+        border-width: 1px;
+        border-color: #F0F0F0;
+        padding: 30px;
+    }
+
+/*  [1] _Layout - mobile only - padding classes */
+    @media(max-width: 991px) {
+        .paddingLeftMobileOnly_5px    { padding-left: 5px;    }
+        .paddingLeftMobileOnly_10px   { padding-left: 10px;   }
+        .paddingLeftMobileOnly_15px   { padding-left: 15px;   }
+        .paddingLeftMobileOnly_20px   { padding-left: 20px;   }
+        .paddingLeftMobileOnly_25px   { padding-left: 25px;   }
+        .paddingLeftMobileOnly_30px   { padding-left: 30px;   }
+        .paddingRightMobileOnly_5px   { padding-right: 5px;   }
+        .paddingRightMobileOnly_10px  { padding-right: 10px;  }
+        .paddingRightMobileOnly_15px  { padding-right: 15px;  }
+        .paddingRightMobileOnly_20px  { padding-right: 20px;  }
+        .paddingRightMobileOnly_25px  { padding-right: 25px;  }
+        .paddingRightMobileOnly_30px  { padding-right: 30px;  }
+        .paddingTopMobileOnly_5px     { padding-top: 5px;     }
+        .paddingTopMobileOnly_10px    { padding-top: 10px;    }
+        .paddingTopMobileOnly_15px    { padding-top: 15px;    }
+        .paddingTopMobileOnly_20px    { padding-top: 20px;    }
+        .paddingTopMobileOnly_25px    { padding-top: 25px;    }
+        .paddingTopMobileOnly_30px    { padding-top: 30px;    }
+        .paddingBottomMobileOnly_5px  { padding-bottom: 5px;  }
+        .paddingBottomMobileOnly_10px { padding-bottom: 10px; }
+        .paddingBottomMobileOnly_15px { padding-bottom: 15px; }
+        .paddingBottomMobileOnly_20px { padding-bottom: 20px; }
+        .paddingBottomMobileOnly_25px { padding-bottom: 25px; }
+        .paddingBottomMobileOnly_30px { padding-bottom: 30px; }
+    }
+
+/*  [1] _Layout - Mobile Only - hide objects I don't want seen on mobile devices */
+    @media (max-width: 991px) {
+	    .hideOnMobile { visibility: hidden; clear: both; display: none; }
+    }
+
+/*  [1] _Layout - desktop only */
+    @media (min-width: 992px) {
+        .noLeftPaddingDesktop { padding-left: 0px; }
+        .paddingTopDesktopOnly_5px { padding-top: 5px; }
+        .paddingLeftDesktopOnly_10px { padding-left: 10px; }
+        .paddingRightDesktopOnly_10px { padding-right: 10px; }
+        .paddingTopDesktopOnly_10px { padding-top: 10px; }
+        .paddingBottomDesktopOnly_10px { padding-bottom: 10px; }
+        .paddingLeftDesktopOnly_20px { padding-left: 20px; }
+        .paddingRightDesktopOnly_20px { padding-right: 20px; }
+        .paddingLeftDesktopOnly_30px { padding-left: 30px; }
+        .paddingRightDesktopOnly_30px { padding-right: 30px; }
+        .paddingBottomDesktopOnly_30px { padding-bottom: 30px; }
+        .paddingLeftDesktopOnly_40px { padding-left: 40px; }
+        .paddingRightDesktopOnly_40px { padding-right: 40px; }
+        .paddingLeftDesktopOnly_45px { padding-left: 45px; }
+        .paddingRightDesktopOnly_45px { padding-right: 45px; }
+        .paddingLeftDesktopOnly_50px { padding-left: 50px; }
+        .paddingRightDesktopOnly_50px { padding-right: 50px; }
+        .paddingRightDesktopOnly_90px { padding-right: 90px; }
+    }
+
+/*  [1] _Layout - Spacers */
+        .spacer-1px  { padding-top: 1px;  }
+        .spacer-2px  { padding-top: 2px;  }
+        .spacer-3px  { padding-top: 3px;  }
+        .spacer-4px  { padding-top: 4px;  }
+        .spacer-5px  { padding-top: 5px;  }
+        .spacer-6px  { padding-top: 6px;  }
+        .spacer-7px  { padding-top: 7px;  }
+        .spacer-8px  { padding-top: 8px;  }
+        .spacer-9px  { padding-top: 9px;  }
+        .spacer-10px { padding-top: 10px; }
+        .spacer-15px { padding-top: 15px; }
+        .spacer-20px { padding-top: 20px; }
+        .spacer-25px { padding-top: 25px; }
+        .spacer-30px { padding-top: 30px; }
+        .spacer-35px { padding-top: 35px; }
+        .spacer-40px { padding-top: 40px; }
+        .spacer-45px { padding-top: 45px; }
+        .spacer-50px { padding-top: 50px; }
+        .spacer-55px { padding-top: 55px; }
+        .spacer-60px { padding-top: 60px; }
+        .spacer-65px { padding-top: 65px; }
+        .spacer-70px { padding-top: 70px; }
+        .spacer-75px { padding-top: 75px; }
+        .spacer-80px { padding-top: 80px; }
+
+
+/*  [2] Sidebar - Radu styling */
+    #ulSidebar a {
+        display: block;
+        width: 196px;
+        padding-left: 10px;
+        padding-right: 60px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        border-radius: 3px;
+    }
+    #ulSidebar a:hover {
+        color: #00AFBA;
+        background-color :#00121E;
+        text-decoration: none;
+        padding-left: 10px;
+        padding-right: 60px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        border-radius: 3px;
+    }
+    .currentApp { 
+        background-color: #00121E;
+        width: 196px;
+        padding-right: 60px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        border-radius: 3px;
+    }
+    .buttonInvisible {
+        padding: 10px 16px;
+        font-size: 21px;
+        background-color: transparent !important;
+    }
+    /* end of Radu Sidebar styling */
+
+    /* These below are needed for the Sidebar Bootstrapious to work */
+    .wrapper { display: flex; width: 100%; }
+    .sidebar-header { padding-top: 20px; background: #002237; }
+    #sidebar { width: 250px; position: fixed; top: 0; left: 0; height: 100vh; z-index: 999; background: #002237; transition: all 0.3s; }
+    #sidebar.active { margin-left: -250px; }
+    
+    /* CONTENT STYLE asociated with Sidebar Bootstrapious - THIS IS NEEDED DO NOT DELETE */
+    #content { width: calc(100% - 250px); height: 100vh; transition: all 0.3s; position: absolute; top: 0; right: 0; }
+    #content.active { width: 100%; }
+
+    /* Media Queries associated with the Sidebar Bootstrapious
+        need to stay at the bottom here - not with the other media
+        querries at the top - this is what broke the mobile site last time
+    */
+    @media (max-width: 768px) {
+        #sidebar { margin-left: -250px; }
+        #sidebar.active { margin-left: 0; }
+        #content { width: 100%; }
+        #content.active { width: calc(100% - 250px); }
+        #sidebarCollapse span { display: none; }
+    }
+
+
+/*  [3] Site-wide - Fonts */
+    /* NotoSansKR - for Sidebar */
+        @font-face {
+            font-family: 'NotoSansKR-Regular';
+            src: url('../fonts/NotoSansKR/NotoSansKR-Regular.otf') format('opentype');
+        }
+        .fontNotoSansKR_Regular { font-family: 'NotoSansKR-Regular'; font-size: 15px; color: #FFFFFF; }
+        @font-face {
+            font-family: 'NotoSansKR-Thin';
+            src: url('../fonts/NotoSansKR/NotoSansKR-Thin.otf') format('opentype');
+        }
+        .fontNotoSansKR_Thin { font-family: NotoSansKR-Thin; font-size: 11px; color: #EDEDED; }
+        .fontNotoSansKR_Thin15px { font-family: NotoSansKR-Thin; font-size: 15px; color: #FFFFFF; }
+
+    /* MerryweatheSans - for Sidebar */
+        @font-face {
+            font-family: 'MerriweatherSans-Light';
+            src: url('../fonts/MerriweatherSans/MerriweatherSans-Light.ttf') format('truetype');
+        }
+        .fontMerriweatherSans_Light { font-family: MerriweatherSans-Light; font-size: 15px; color: #FFFFFF; }
+
+    /* Segoe UI - segoeui.ttf (regular) / segoeuib.ttf (bold) / seguibl.ttf (black) */
+        @font-face {
+            font-family: 'segoeui';
+            src: url('../fonts/SegoeUI/segoeui.ttf') format('truetype');
+        }
+        .fontSegoeUI_Regular { font-family: 'segoeui'; font-size: 29px; }
+        @font-face {
+            font-family: 'segoeuib';
+            src: url('../fonts/SegoeUI/segoeuib.ttf') format('truetype');
+        }
+        .fontSegoeUI_Bold { font-family: 'segoeuib'; font-size: 29px; }
+        @font-face {
+            font-family: 'seguibl';
+            src: url('../fonts/SegoeUI/seguibl.ttf') format('truetype');
+        }
+        .fontSegoeUI_Black { font-family: 'seguibl'; font-size: 29px; }
+
+
+/*  [3] Site-wide - lines */
+    /* original greyLine */
+        .greyLine { border-bottom: solid 1px #F0F0F0 !important; margin: 0px 0px 0px 0px; /* top, right, bottom, left */ }
+    /* grey line lighter */
+        .greyLineLighter { border-bottom: solid 1px #F0F0F0 !important; opacity: 0.6; margin: 0px 0px 0px 0px; display: block;}
+    /* vertical line */
+        .verticalLine { border-left: 1px solid #F0F0F0; }
+
+/*  [3] Site-wide - bootstrapOverride */
+    #bootstrapOverride .form-control { border-radius: 2px; }
+    #bootstrapOverride textarea {
+        background-color: #FFFFFF;
+        border-color: #CED4DA;
+        border-radius: 2px;
+        color: #495057;
+        min-width: 100%;
+    }
+
+/*  [3] Site-wide - links */
+    /* Right Side Links */
+        .rightSideLinksUL {
+            list-style-type: none; 
+            -webkit-margin-before: 7px;     /* handles spacing at the top of the ul */
+            margin-left: 20px;              /* padding-inline-start: 10px; */
+            padding-left: 20px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        .rightSideLinksLI { padding-bottom: 3px; }
+        .linkRightSide {
+            color: #99979C;
+            font-size: 15px;
+        }
+        .linkRightSide:hover { text-decoration: none; color: #00AFBA; }
+    /* Blue links */
+        .linkTeal { color: #00AFBA; }
+        .linkTeal:hover { color: #96268F; text-decoration: none; } 
+    /* KPI links */
+        .linkKPI {color: #404040; padding-top: 7px; }
+        .linkKPI:hover { text-decoration: none; color: #00AFBA; }
+
+
+/*  [3] Site-wide - card */
+    .cardStyles { min-height: 235px; }
+    .cardStyles:hover { box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important; }
+    .cardArrow { display: block; float: right; }
+    .cardStylesText { color: black; }
+    .cardStylesText:hover { text-decoration: none; color: #00AFBA; }
+    .cardStylesTextLightGrey { color: #99979C; }
+    .cardStylesTextLightGrey:hover { text-decoration: none; color: #00AFBA; }
+
+    .cardSmaller:hover { box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important; }
+    .cardSmallerTextLightGrey { color: #99979C; }
+    .cardSmallerTextLightGrey:hover { text-decoration: none; color: #00AFBA; }
+
+
+/*  [3] Site-wide - divs */
+    /* show/hide divs */
+        .divShow { display: block; }
+        .divHide { display: none; }
+    /* KPI definition divs */
+        .divKPIDefinition {
+            background-color: #f3f3f3;
+            padding: 10px 20px 10px 20px;
+            margin-top: 5px;
+            border-radius: 2px;
+            color: #99979C;
+        }
+
+
+/* [3] Site-wide - inside page 'Heading' + 'breadcrumbs' */
+    /*.fontSize33px { font-size: 33px; }*/
+    .breadcrumbsLink { color: #939497; font-size: 12px; } /* was color: #555; */
+    .breadcrumbsLink:hover { color: #5B5B5B; text-decoration: none; font-size: 12px; }
+    .breadcrumbsText { color: #939497; font-size: 12px; }
+    .breadcrumbsIcons { color: #939497; font-size: 12px;}
+
+/*  [3] Site-wide - label */
+    .labelGIOS { padding-top: 7px; color: #404040; }
+    .subLabelGIOS { color: #99979C; font-size: 13px; margin-top: -2px; }
+    .labelGrey { color: deeppink; }
+
+/*  [3] Site-wide - dropdown */
+    .dropDownGIOS {
+        display: block;
+        padding: 6px 10px 6px 13px !important; 
+        max-width: 100%; 
+        height: auto !important;
+        background: url(https://res.cloudinary.com/arconic/image/upload/v1549314262/GIOS/images/iconfinder_arrow_down.png) no-repeat right center;        
+        background-position: right 11px top 13px;
+        background-color: #FFFFFF; 
+        -webkit-appearance: none;   /* Removes default arrow from Chrome */
+        text-indent: 0.01px;        /* Removes default arrow from Firefox */
+        text-overflow: "";          /* Removes default arrow from Firefox */
+    }
+
+/*  [3] Site-wide - checkbox */
+    .checkboxGIOS { width: 17px; height: 17px; }
+
+/*  [3] Site-wide - button */
+    /* styling input="file" button */
+        input[type="file"] { display: none; }
+        .buttonFileUpload {
+            color: #404040;
+            border: 1px solid #ced4da;
+            border-radius: 2px;
+            border-color: #CED4DA;  /* was teal: #00AFBA; */
+            display: inline-block;
+            padding: 6px 12px;
+            cursor: pointer;
+        }
+        .buttonFileUpload:hover { 
+            background-color: #00AFBA;
+            color: #FFFFFF; 
+            transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        }
+    /* styling input type="submit" button */
+        input[type="submit"] { display: none; }
+
+
+    #bootstrapOverride .btn-outline-info {
+        color: #00AFBA;
+        border-radius: 2px;
+        border-color: #00AFBA;
+    }
+    #bootstrapOverride .btn-outline-info:hover { color: #FFFFFF;}
+
+
+
+/* [4] _Footer */
+.footerText {
+    font-size: 12px;
+    color: #B9BBBE;
+}
+    .footerArconicTreatment { font-size: 12px; font-style: italic; color: #939497; }
+    .footerPipe { font-size: 12px; opacity: 0.5; color: #B9BBBE; }
+    .footerSiteVersion { font-size: 12px; color: #939497; }
+    .footerLink { font-size: 12px; color: #B9BBBE; }
+    .footerLink:hover { color: #5B5B5B; text-decoration: none; }
+
+
+/*  [9] Font Awesome */
+    .fontAwesomeSidebar { font-size: 12px; margin-right: 8px; color: #4f808d; }
+    .fontAwesomeJumbotron { font-size: 16px; color: lightgrey; }
+    .fontAwesomeMedia { padding-right: 30px; padding-bottom: 30px; padding-top: 15px; }
+    .fontAwesomePageTitle { font-size: 32px; color: #00AFBA;}

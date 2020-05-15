@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Gios_mvcSolution.Areas.UseCase.Models.RequiredSupportTypes>
+
+<h2>Create Modify Required Support</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.strSupportType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strSupportTypeDescr)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dtmCreated)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strCreatorID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dtmModified)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strModifierID)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.strSupportType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strSupportTypeDescr)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.dtmCreated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strCreatorID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.dtmModified)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strModifierID)
+            </td>
+            <td>
+                <button class="btn btn-default" onclick="loadPartialReqSuppView('Edit', this.id)" id="@item.intSupportTypeID"> Edit</button>
+                <button class="btn btn-default" onclick="loadPartialReqSuppView('Delete', this.id)" id="@item.intSupportTypeID"> Remove</button>
+            </td>
+        </tr>
+    }
+
+</table>
+<hr />
+<div>
+    @* @Html.ActionLink("Create New", "Create", null, new { @id = "Create" })*@
+    <button class="btn btn-dark" onclick="loadPartialReqSuppView('Create', this.id)" id="Create"> Create New Required Support Type</button>
+</div>

@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Gios_mvcSolution.Areas.UseCase.Models.ImpactKPI>
+<h4>Create / Modify Impact Calculation Methodolgy KPIS</h4>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.strKPI)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strKPIDescr)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dtmCreated)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strCreatorID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dtmModified)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strModifierID)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.strKPI)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strKPIDescr)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.dtmCreated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strCreatorID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.dtmModified)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.strModifierID)
+            </td>
+            <td>
+                <button class="btn btn-default" onclick="loadPartialImpactKPIView('Edit', this.id)" id="@item.strKPI"> Edit</button>
+                <button class="btn btn-default" onclick="loadPartialImpactKPIView('Delete', this.id)" id="@item.strKPI"> Remove</button>
+            </td>
+        </tr>
+    }
+
+</table>
+<hr />
+<div>
+    @* @Html.ActionLink("Create New", "Create", null, new { @id = "Create" })*@
+    <button class="btn btn-dark" onclick="loadPartialImpactKPIView('Create', this.id)" id="Create"> Create KPI </button>
+</div>
